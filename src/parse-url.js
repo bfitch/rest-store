@@ -1,7 +1,7 @@
 import pathToRegexp from 'path-to-regexp';
 import URL from 'url-parse';
 
-export function parseUrl(method, url, identifier, attrs) {
+export default function parseUrl(method, url, identifier, attrs) {
   const parsedUrl = URL(mapUrl(method, url, identifier));
   const pathname  = parsedUrl.pathname;
   const toPath    = pathToRegexp.compile(pathname);
@@ -11,10 +11,9 @@ export function parseUrl(method, url, identifier, attrs) {
 }
 
 function mapUrl(method, url, identifier) {
-  if (method === 'findAll' || method === 'create') { 
+  if (method === 'findAll' || method === 'create') {
     return url;
   } else {
     return `${url}/:${identifier}`;
   }
 }
-
