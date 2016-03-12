@@ -6,21 +6,22 @@ export default function(store = {}) {
       if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
       if (isEmpty(query)) throw new Error('You must provide a query when getting items from the store');
 
-      const cachedData = store[path];
-
-      return promisify(getQuery(cachedData, query));
+      return promisify(queryStore('find', store[path], query));
     }
   }
 }
 
-function getQuery(cachedData, query) {
-  if (isEmpty(cachedData)) {
-    return null;
-  } else {
-    const key         = Object.keys(query);
-    const value       = query[key];
-    const queryResult = cachedData.find(item => item[key] === value);
+function queryStore(method, cachedData, query) {
+  if (isEmpty(cachedData)) return null;
 
-    return isEmpty(queryResult) ? null : queryResult;
-  }
+  const [key,value] = _parse(query);
+  const result = cachedData[method].call(cachedData, (item) => item[key] === value);
+
+  return isEmpty(result) ? null : result;
+}
+
+function _parse(query) {
+  const key   = Object.keys(query);
+  const value = query[key];
+  return [key,value];
 }
