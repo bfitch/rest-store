@@ -1,7 +1,7 @@
 {
-  "name": "cerebral-rest-client",
+  "name": "rest-store",
   "version": "0.0.1",
-  "description": "Fetch resources locally or remotely using REST conventions",
+  "description": "Fetch resources in-memory or remotely using REST conventions",
   "main": "dist/index.js",
   "scripts": {
     "start": "webpack --devtool source-map --progress --colors --watch",
@@ -10,6 +10,7 @@
   },
   "peerDependencies": {},
   "dependencies": {
+    "axios": "^0.9.1",
     "path-to-regexp": "^1.2.1",
     "url-parse": "^1.0.5"
   },
@@ -26,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bfitch/cerebral-rest-client"
+    "url": "https://github.com/bfitch/rest-store"
   },
   "keywords": [
     "cerebral",
@@ -37,7 +38,7 @@
   "author": "Brian Fitch",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bfitch/cerebral-rest-client/issues"
+    "url": "https://github.com/bfitch/rest-store/issues"
   },
-  "homepage": "https://github.com/bfitch/cerebral-rest-client"
+  "homepage": "https://github.com/bfitch/rest-store"
 }
