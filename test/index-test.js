@@ -1,6 +1,6 @@
-import {describe, it} from 'mocha';
-import {expect} from 'chai';
-import _ from '../index';
+// import {describe, it} from 'mocha';
+// import {expect} from 'chai';
+// import _ from '../index';
 
 // REST API
 //
@@ -11,7 +11,7 @@ import _ from '../index';
 // store.update('todos', {id: 1}, attrs); // PUT /todos/1         UPDATE #update
 //
 // store.delete('todos', 1)               // DELETE /todos/1      DELETE #destroy
-// 
+//
 // CONFIG
 //
 // controller.addModules({
@@ -22,7 +22,7 @@ import _ from '../index';
 //     // currentUser: {url: `${host}/api/v1/me.json`, root: false},
 //     // tasks: {url: 'patients/:patient_guid/tasks, root: false, identifier: 'uid'},
 //   }),
-//   
+//
 //  USAGE
 //
 // ({input, state, services}) => {
@@ -38,6 +38,6 @@ import _ from '../index';
 // },
 //
 
-describe('', () => {
-  expect().to.be.ok
-});
+// describe('', () => {
+//   expect().to.be.ok
+// });

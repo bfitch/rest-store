@@ -6,10 +6,13 @@
   "scripts": {
     "start": "webpack --devtool source-map --progress --colors --watch",
     "build": "webpack --progress --colors",
-    "test": "mocha --compilers js:babel-register"
+    "test": "mocha --compilers js:babel-register --reporter spec --colors"
   },
   "peerDependencies": {},
-  "dependencies": {},
+  "dependencies": {
+    "path-to-regexp": "^1.2.1",
+    "url-parse": "^1.0.5"
+  },
   "devDependencies": {
     "babel-core": "^6.4.0",
     "babel-loader": "^6.2.1",
@@ -25,7 +28,12 @@
     "type": "git",
     "url": "https://github.com/bfitch/cerebral-rest-client"
   },
-  "keywords": ["cerebral", "ajax", "baobab", "REST"],
+  "keywords": [
+    "cerebral",
+    "ajax",
+    "baobab",
+    "REST"
+  ],
   "author": "Brian Fitch",
   "license": "MIT",
   "bugs": {

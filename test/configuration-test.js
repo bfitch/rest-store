@@ -1,4 +1,4 @@
-import {describe, it} from 'mocha'
+import {describe,it} from 'mocha'
 import {expect} from 'chai'
 import config from '../src/configuration'
 
@@ -52,9 +52,61 @@ describe('configuration', function() {
   })
 
   describe('url', function() {
-    it ('returns the url', function() {
+    it ('builds from client side store query attributes', function() {
       const url = config('find', 'todos', {id: 1}, {}, this.mappings).url
       expect(url).to.eql(this.url + '/1')
+    })
+
+    it ('builds from http query params', function() {
+      const url = config('find', 'todos', {}, {params: {id: 1}}, this.mappings).url
+      expect(url).to.eql(this.url + '/1')
+    })
+
+    it ('builds from other attributes passed in', function() {
+      const url = config('find', 'todos', {}, {id: 1}, this.mappings).url
+      expect(url).to.eql(this.url + '/1')
+    })
+
+    it ('builds from client side query attributes', function() {
+      const url = config('find', 'todos', {id: 1}, {}, this.mappings).url
+      expect(url).to.eql(this.url + '/1')
+    })
+
+    it ('can handle dynamic route segments', function() {
+      this.url = 'http://todos.com/:user_id/todos'
+      this.mappings = {
+        todos: {
+          url: this.url
+        }
+      }
+      const url = config('find', 'todos', {user_id: 123}, {id: 1}, this.mappings).url
+      expect(url).to.eql('http://todos.com/123/todos/1')
+    })
+
+    describe ('can handle custom identifiers in REST actions', function() {
+      it ('retutns the correct PUT url', function() {
+        this.url = 'http://todos.com/todos'
+        this.mappings = {
+          todos: {
+            url: this.url,
+            identifier: 'uid'
+          }
+        }
+        const url = config('find', 'todos', {uid: 123}, {}, this.mappings).url
+        expect(url).to.eql('http://todos.com/todos/123')
+      })
+
+      it ('retutns the correct POST url', function() {
+        this.url = 'http://todos.com/todos'
+        this.mappings = {
+          todos: {
+            url: this.url,
+            identifier: 'uid'
+          }
+        }
+        const url = config('findAll', 'todos', {uid: 123}, {}, this.mappings).url
+        expect(url).to.eql('http://todos.com/todos')
+      })
     })
   })
 

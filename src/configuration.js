@@ -1,10 +1,10 @@
 import parseUrl from './parse-url';
 
-export default function(method, path, query, httpOptions = {}, mappings) {
-  if (!mappings) throw new Error('You must provide url mappings')
-  if (!path)     throw new Error('You must provide a path')
+export default function(method, path, query = {}, httpOptions = {}, mappings) {
+  if (!mappings) throw new Error('You must provide url mappings');
+  if (!path)     throw new Error('You must provide a path');
 
-  const {url, root = path, identifier = 'id'}               = mappings[path];
+  const {url, root = path, identifier = 'id', model}        = mappings[path];
   const {headers = {}, params = {}, force = false, ...rest} = httpOptions;
   const routeParams = Object.assign({}, params, query, rest);
 
@@ -18,6 +18,8 @@ export default function(method, path, query, httpOptions = {}, mappings) {
     path:    path,
     params:  params,
     headers: headers,
-    force:   force
+    force:   force,
+    model:   model,
+    query:   query
   }
 }
