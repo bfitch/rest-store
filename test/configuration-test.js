@@ -110,11 +110,34 @@ describe('configuration', function() {
     })
   })
 
-  describe('root', function() {
+  describe ('model', function() {
     describe('no option passed in', function(){
-      it ('defaults to the path', function() {
+      it ('defaults to false', function() {
+        const model = config('find', 'todos', {}, {}, this.mappings).model
+        expect(model).to.be.false
+      })
+    })
+    describe('true is passed in', function() {
+      it ('returns true', function() {
+        const mappings = {todos: {...this.mappings.todos, model: true}}
+        const model = config('find', 'todos', {}, {}, mappings).model
+        expect(model).to.be.true
+      })
+    })
+    describe('non-boolean value is passed in', function() {
+      it ('throws an error', function() {
+        const mappings = {todos: {...this.mappings.todos, model: 'string'}}
+        const model = () => config('find', 'todos', {}, {}, mappings).model
+        expect(model).to.throw(Error, "'model' option must be a boolean value.");
+      })
+    })
+  })
+
+  describe ('root', function() {
+    describe('no option passed in', function(){
+      it ('defaults to true', function() {
         const root = config('find', 'todos', {}, {}, this.mappings).root
-        expect(root).to.eql('todos')
+        expect(root).to.be.true
       })
     })
     describe('false is passed in', function() {
@@ -124,11 +147,11 @@ describe('configuration', function() {
         expect(root).to.be.false
       })
     })
-    describe('custom root name is passed in', function() {
-      it ('returns the custom root name', function() {
-        const mappings = {todos: {...this.mappings.todos, root: 'customRootName'}}
-        const root = config('find', 'todos', {}, {}, mappings).root
-        expect(root).to.be.eql('customRootName')
+    describe('non-boolean value is passed in', function() {
+      it ('throws an error', function() {
+        const mappings = {todos: {...this.mappings.todos, root: 'string'}}
+        const root = () => config('find', 'todos', {}, {}, mappings).root
+        expect(root).to.throw(Error, "'root' option must be a boolean value.");
       })
     })
   })

@@ -6,7 +6,7 @@ export default function(storeAdapter = storeAdapter, ajaxAdapter = ajaxAdapter, 
     find(path, query, httpOptions) {
       const options = config('find', path, query, httpOptions, mappings);
       const {url, root, params, headers, force, model, query} = options;
-      const ajax = ajaxAdapter(ajax, {path, root, model})
+      const ajax = ajaxAdapter(ajax, {root, model})
 
       if (force) {
         return ajax.find(url, params, headers);
