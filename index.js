@@ -1,19 +1,32 @@
-import storeAdapter from './src/plain-js-store-adapter';
-import ajaxAdapter from './src/axios-adapter';
+import jsStoreAdapter from './src/plain-js-store-adapter';
+import axiosAdapter from './src/axios-adapter';
+import config from './src/configuration';
 
-export default function(storeAdapter = storeAdapter, ajaxAdapter = ajaxAdapter, mappings) {
+export default function(mappings, storageAdapter, ajaxClientAdapter) {
+  const storeAdapter = storageAdapter    || jsStoreAdapter;
+  const ajaxAdapter  = ajaxClientAdapter || axiosAdapter;
+
   return {
-    find(path, query, httpOptions) {
-      const options = config('find', path, query, httpOptions, mappings);
-      const {url, root, params, headers, force, model, query} = options;
-      const ajax = ajaxAdapter(ajax, {root, model})
+    find(path, clientQuery, httpOptions) {
+      const options = config('find', path, clientQuery, httpOptions, mappings);
+      const {url, root, params, headers, force, model, query, identifier} = options;
+
+      const ajax  = ajaxAdapter({root, model});
+      const store = storeAdapter({identifier});
+
+      console.log(store)
 
       if (force) {
-        return ajax.find(url, params, headers);
+        return ajax.find(url, params, headers).then(fetchedData => {
+          return store.add(path, fetchedData);
+        });
       } else {
-        return storeAdapter.get(path, query).then(data => {
-          return data || ajax.find(url, params, headers);
-        })
+        return store.get(path, query).then(data => {
+          if (data) return data;
+
+          const fetchedData = ajax.find(url, params, headers);
+          return fetchedData.then(data => store.add(path, data));
+        });
       }
     }
   }

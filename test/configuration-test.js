@@ -24,6 +24,13 @@ describe('configuration', function() {
         config('find', undefined, {}, {}, this.mappings)
       }).to.throw(Error, 'You must provide a path')
     })
+
+    it ('raises an error if mappings object dosen\'t have the path key', function() {
+      this.mappings = {url: this.url}
+      expect(() => {
+        config('find', 'todos', {}, {}, this.mappings)
+      }).to.throw(Error, "No key 'todos' found in mapping configuration")
+    })
   })
 
   describe('httpOptions', function() {
@@ -84,7 +91,7 @@ describe('configuration', function() {
     })
 
     describe ('can handle custom identifiers in REST actions', function() {
-      it ('retutns the correct PUT url', function() {
+      it ('returns the correct PUT url', function() {
         this.url = 'http://todos.com/todos'
         this.mappings = {
           todos: {
@@ -96,7 +103,7 @@ describe('configuration', function() {
         expect(url).to.eql('http://todos.com/todos/123')
       })
 
-      it ('retutns the correct POST url', function() {
+      it ('returns the correct POST url', function() {
         this.url = 'http://todos.com/todos'
         this.mappings = {
           todos: {
@@ -115,6 +122,15 @@ describe('configuration', function() {
       it ('defaults to false', function() {
         const model = config('find', 'todos', {}, {}, this.mappings).model
         expect(model).to.be.false
+      })
+    })
+    describe('true is passed in', function(){
+      it ('throws an error', function() {
+        const mappings = {todos: {...this.mappings.todos, model: true}}
+        expect(() => {
+          config('find', 'todos', {}, {}, mappings).model
+        }).to.throw(Error, "You must provide a class name or constructor function." +
+          " Received: 'true'");
       })
     })
     describe('class constant is passed in', function() {

@@ -16,9 +16,9 @@ describe('axiosAdapter', function() {
     describe('no model passed in', function() {
       it ('makes an ajax request and returns the correct data', function(done) {
         const options = { root: true, model: false };
-        const adapter = ajaxAdapter(mockAxios, options);
+        const adapter = ajaxAdapter(mockAxios)(options);
 
-        adapter.find('http://todos.com/3', {}, {}).then(data => {
+        return adapter.find('http://todos.com/3', {}, {}).then(data => {
           expect(data).to.eql({id: 3, title: 'cool'})
           done()
         })
@@ -34,9 +34,9 @@ describe('axiosAdapter', function() {
 
         it ('throws an error if response has not root key', function(done) {
           const options = { root: true, model: false };
-          const adapter = ajaxAdapter(mockAxios, options);
+          const adapter = ajaxAdapter(mockAxios)(options);
 
-          adapter.find('http://todos.com/3', {}, {}).catch(error => {
+          return adapter.find('http://todos.com/3', {}, {}).catch(error => {
             expect(error.message).to.eql(
               'Expecting a root key in ajax response. But the response was empty.'
             )
@@ -55,9 +55,9 @@ describe('axiosAdapter', function() {
 
         it ('makes an ajax request and returns the correct data', function(done) {
           const options = { root: false, model: false };
-          const adapter = ajaxAdapter(mockAxios, options);
+          const adapter = ajaxAdapter(mockAxios)(options);
 
-          adapter.find('http://todos.com/3', {}, {}).then(data => {
+          return adapter.find('http://todos.com/3', {}, {}).then(data => {
             expect(data).to.eql({id: 3, title: 'cool'})
             done()
           })
@@ -66,21 +66,26 @@ describe('axiosAdapter', function() {
     })
 
     describe('model is passed in', function() {
-      const apiResponse = {id: 3, title: 'cool'};
-      const mockAxios = (options) => {
+      const apiResponse = {todo: {id: 3, title: 'cool'}};
+      const mockAxios   = (options) => {
         return (new Promise((resolve, reject) => {
           resolve(apiResponse)
         }))
       }
+      class Todo {
+        constructor(attrs) {
+          Object.assign(this, attrs);
+        }
+      }
 
-      it ('it instantiates the models and inserts them in the store', function(done) {
-        const options = { root: true, model: false };
-        const adapter = ajaxAdapter(mockAxios, options);
+      it ('instantiates the model and inserts it in the store', function(done) {
+        const options = {root: true, model: Todo};
+        const adapter = ajaxAdapter(mockAxios)(options);
 
-        adapter.find('http://todos.com/3', {}, {}).catch(error => {
-          expect(error.message).to.eql(
-            'Expecting a root key in ajax response. But the response was empty.'
-          )
+        return adapter.find('http://todos.com/3', {}, {}).then(data => {
+          expect(data).to.be.an.instanceof(Todo);
+          expect(data.id).to.eql(3);
+          expect(data.title).to.eql('cool');
           done()
         })
       })
