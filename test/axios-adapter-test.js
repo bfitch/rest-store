@@ -23,6 +23,67 @@ describe('axiosAdapter', function() {
           done()
         })
       })
+
+      describe('root is true', function() {
+        const apiResponse = {}
+        const mockAxios = (options) => {
+          return (new Promise((resolve, reject) => {
+            resolve(apiResponse)
+          }))
+        }
+
+        it ('throws an error if response has not root key', function(done) {
+          const options = { root: true, model: false };
+          const adapter = ajaxAdapter(mockAxios, options);
+
+          adapter.find('http://todos.com/3', {}, {}).catch(error => {
+            expect(error.message).to.eql(
+              'Expecting a root key in ajax response. But the response was empty.'
+            )
+            done()
+          })
+        })
+      })
+
+      describe('root is false', function() {
+        const apiResponse = {id: 3, title: 'cool'};
+        const mockAxios = (options) => {
+          return (new Promise((resolve, reject) => {
+            resolve(apiResponse)
+          }))
+        }
+
+        it ('makes an ajax request and returns the correct data', function(done) {
+          const options = { root: false, model: false };
+          const adapter = ajaxAdapter(mockAxios, options);
+
+          adapter.find('http://todos.com/3', {}, {}).then(data => {
+            expect(data).to.eql({id: 3, title: 'cool'})
+            done()
+          })
+        })
+      })
+    })
+
+    describe('model is passed in', function() {
+      const apiResponse = {id: 3, title: 'cool'};
+      const mockAxios = (options) => {
+        return (new Promise((resolve, reject) => {
+          resolve(apiResponse)
+        }))
+      }
+
+      it ('it instantiates the models and inserts them in the store', function(done) {
+        const options = { root: true, model: false };
+        const adapter = ajaxAdapter(mockAxios, options);
+
+        adapter.find('http://todos.com/3', {}, {}).catch(error => {
+          expect(error.message).to.eql(
+            'Expecting a root key in ajax response. But the response was empty.'
+          )
+          done()
+        })
+      })
     })
   })
 })

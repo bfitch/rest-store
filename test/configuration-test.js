@@ -117,18 +117,13 @@ describe('configuration', function() {
         expect(model).to.be.false
       })
     })
-    describe('true is passed in', function() {
-      it ('returns true', function() {
-        const mappings = {todos: {...this.mappings.todos, model: true}}
+    describe('class constant is passed in', function() {
+      class Todo {}
+
+      it ('returns returns the function', function() {
+        const mappings = {todos: {...this.mappings.todos, model: Todo}}
         const model = config('find', 'todos', {}, {}, mappings).model
-        expect(model).to.be.true
-      })
-    })
-    describe('non-boolean value is passed in', function() {
-      it ('throws an error', function() {
-        const mappings = {todos: {...this.mappings.todos, model: 'string'}}
-        const model = () => config('find', 'todos', {}, {}, mappings).model
-        expect(model).to.throw(Error, "'model' option must be a boolean value.");
+        expect(new model).to.be.an.instanceof(Todo);
       })
     })
   })
