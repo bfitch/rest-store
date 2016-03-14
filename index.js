@@ -1,10 +1,8 @@
-import jsStoreAdapter from './src/plain-js-store-adapter';
 import axiosAdapter from './src/axios-adapter';
 import config from './src/configuration';
 
-export default function(mappings, storageAdapter, ajaxClientAdapter) {
-  const storeAdapter = storageAdapter    || jsStoreAdapter;
-  const ajaxAdapter  = ajaxClientAdapter || axiosAdapter;
+export default function(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) {
+  if (!storeAdapter) throw new Error('No storeAdapter. You must provide an in-memory store')
 
   return {
     find(path, clientQuery, httpOptions) {
@@ -14,11 +12,9 @@ export default function(mappings, storageAdapter, ajaxClientAdapter) {
       const ajax  = ajaxAdapter({root, model});
       const store = storeAdapter({identifier});
 
-      console.log(store)
-
       if (force) {
         return ajax.find(url, params, headers).then(fetchedData => {
-          return store.add(path, fetchedData);
+          return store.replaceObject(path, fetchedData);
         });
       } else {
         return store.get(path, query).then(data => {

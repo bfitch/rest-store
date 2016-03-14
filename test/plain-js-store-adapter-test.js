@@ -1,6 +1,6 @@
 import {describe,it} from 'mocha'
 import {expect} from 'chai'
-import storeAdapter from '../src/plain-js-store-adapter'
+import storeAdapter,{_replaceObject} from '../src/plain-js-store-adapter'
 
 describe('plain JS storeAdapter', function() {
   describe('get', function() {
@@ -145,6 +145,39 @@ describe('plain JS storeAdapter', function() {
           expect(data).to.eql({id: 2, b: 'b'})
           done()
         })
+      })
+    })
+  })
+
+  describe ('replaceObject', function() {
+    it ('replaces an object in the store with a new version', function(done) {
+      const data      = [{id: 1, foo: 'foo'}, {id: 5, bar: 'bar'}]
+      const adapter   = storeAdapter({todos: data});
+      const newObject = {id: 5, woot: 'woot'};
+
+      adapter().replaceObject('todos', newObject).then(data => {
+        expect(data).to.equal(newObject);
+        done()
+      })
+    })
+
+    it ('adds an object to an empty store', function(done) {
+      const adapter   = storeAdapter({todos: []});
+      const newObject = {id: 5, woot: 'woot'};
+
+      adapter().replaceObject('todos', newObject).then(data => {
+        expect(data).to.equal(newObject);
+        done()
+      })
+    })
+
+    it ('adds an empty object to the store', function(done) {
+      const adapter   = storeAdapter({todos: []});
+      const emptyObject = {};
+
+      adapter().replaceObject('todos', emptyObject).then(data => {
+        expect(data).to.equal(emptyObject);
+        done()
       })
     })
   })

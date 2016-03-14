@@ -1,7 +1,7 @@
-import axios from 'axios';
+import ajax from 'axios';
 import {isEmpty} from './utils';
 
-export default function(axios) {
+export default function(axios = ajax) {
   return (options) => {
     return {
       find(url, params, headers) {
@@ -12,7 +12,7 @@ export default function(axios) {
 
     function request(axiosOptions, {root, model}) {
       return axios(axiosOptions).then(response => {
-          return normalizeResponse(response, {root});
+          return normalizeResponse(response.data, {root});
         })
         .then(data => {
           return !model ? data : buildModels(data, model);
@@ -21,8 +21,8 @@ export default function(axios) {
 
     function normalizeResponse(response, {root}) {
       if (root) {
-        const emptyMsg = 'Expecting a root key in ajax response. But the response was empty.'
-        if (isEmpty(response)) throw new Error(emptyMsg);
+        const msg = 'Expecting a root key in ajax response. But the response was empty.'
+        if (isEmpty(response)) throw new Error(msg);
 
         const rootKey = Object.keys(response).pop();
         return response[rootKey];

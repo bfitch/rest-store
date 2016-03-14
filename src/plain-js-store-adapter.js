@@ -12,18 +12,26 @@ export default function (store = {}) {
 
       add(path, data) {
         if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
-        return promisify(mutateStore(store[path], data));
+        return promisify(_add(store[path], data));
+      },
+
+      replaceObject(path, object, id = identifier) {
+        return promisify(_replaceObject(store[path], object, id));
       }
     }
   }
 }
 
-function mutateStore(cachedData, newData) {
-  if (Array.isArray(cachedData)) {
-    cachedData.push(newData);
-    return cachedData;
+function _replaceObject(cachedData, object, id) {
+  if (isEmpty(object)) {
+    cachedData.push(object);
+    return object;
   } else {
-    return cachedData = newData;
+    const updatedData = cachedData.filter(item => {
+      return item[id] !== object[id];
+    });
+    updatedData.push(object);
+    return object;
   }
 }
 
@@ -48,4 +56,22 @@ function _parse(query) {
   const key   = Object.keys(query);
   const value = query[key];
   return [key,value];
+}
+
+function _add(cachedData, newData) {
+  if (Array.isArray(cachedData)) {
+    cachedData.push(newData);
+    return cachedData;
+  } else {
+    return cachedData = newData;
+  }
+}
+
+function _replace(cachedData, newData) {
+  if (Array.isArray(cachedData)) {
+    cachedData = newData;
+    return cachedData;
+  } else {
+    return cachedData = newData;
+  }
 }

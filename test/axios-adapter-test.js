@@ -4,13 +4,11 @@ import ajaxAdapter from '../src/axios-adapter';
 
 describe('axiosAdapter', function() {
   describe('find', function() {
-    const apiResponse = {todo: {id: 3, title: 'cool'}}
+    const apiResponse = {data: {todo: {id: 3, title: 'cool'}}};
     const mockAxios = (options) => {
-      return (
-          new Promise((resolve, reject) => {
-            resolve(apiResponse)
-          })
-      )
+      return new Promise((resolve, reject) => {
+        resolve(apiResponse)
+      });
     }
 
     describe('no model passed in', function() {
@@ -25,7 +23,7 @@ describe('axiosAdapter', function() {
       })
 
       describe('root is true', function() {
-        const apiResponse = {}
+        const apiResponse = {data: {}}
         const mockAxios = (options) => {
           return (new Promise((resolve, reject) => {
             resolve(apiResponse)
@@ -46,7 +44,7 @@ describe('axiosAdapter', function() {
       })
 
       describe('root is false', function() {
-        const apiResponse = {id: 3, title: 'cool'};
+        const apiResponse = {data: {id: 3, title: 'cool'}};
         const mockAxios = (options) => {
           return (new Promise((resolve, reject) => {
             resolve(apiResponse)
@@ -66,7 +64,7 @@ describe('axiosAdapter', function() {
     })
 
     describe('model is passed in', function() {
-      const apiResponse = {todo: {id: 3, title: 'cool'}};
+      const apiResponse = {data: {todo: {id: 3, title: 'cool'}}};
       const mockAxios   = (options) => {
         return (new Promise((resolve, reject) => {
           resolve(apiResponse)
