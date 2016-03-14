@@ -3,7 +3,6 @@ import {expect} from 'chai';
 import RESTstore from '../index';
 import jsStoreAdapter from '../src/plain-js-store-adapter';
 import nock from 'nock';
-// import runServer from './support/mock-server';
 
 describe('RESTstore Integration Tests', function() {
   const mockServer = nock('http://todos.com');
@@ -29,8 +28,8 @@ describe('RESTstore Integration Tests', function() {
       it ('returns a promise that resolves with the in-memory data', function(done) {
         store.find('todos', {id: 1}).then(data => {
           expect(data).to.equal(a)
-          done()
         })
+        done()
       })
 
       describe ('force is passed as an option', function() {
@@ -39,16 +38,18 @@ describe('RESTstore Integration Tests', function() {
             .get('/todos/3')
             .reply(200, {todo: {id: 3, c: 'c' }});
 
-          const [a,b]        = [{id: 1, a: 'a'}, {id: 3, c: 'c'}]
-          const storeAdapter = jsStoreAdapter({todos: [a,b]})
+          const cache        = {todos: [{id: 1, a: 'a'}, {id: 3, c: 'c'}]};
+          const [a,c]        = cache.todos;
+          const storeAdapter = jsStoreAdapter(cache)
           const store        = RESTstore(mappings, storeAdapter)
 
-          it ('performs an ajax request and replaces the in-memory object', function(done) {
+          it ('makes an ajax request, returns the object, replaces it in the store', function(done) {
             store.find('todos', {id: 3}, {force: true}).then(data => {
-              expect(data).to.not.equal(b);
-              expect(data).to.eql(b);
-              done()
+              expect(data).to.not.equal(c);
+              expect(data).to.eql(c);
             })
+            expect(cache).to.eql({todos: [{id: 1, a: 'a'}, {id: 3, c: 'c'}]});
+            done()
           })
         })
       })

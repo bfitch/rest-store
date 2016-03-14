@@ -151,34 +151,39 @@ describe('plain JS storeAdapter', function() {
 
   describe ('replaceObject', function() {
     it ('replaces an object in the store with a new version', function(done) {
-      const data      = [{id: 1, foo: 'foo'}, {id: 5, bar: 'bar'}]
-      const adapter   = storeAdapter({todos: data});
+      const cache     = {todos: [{id: 1, foo: 'foo'}, {id: 5, bar: 'bar'}]};
+      const adapter   = storeAdapter(cache);
       const newObject = {id: 5, woot: 'woot'};
 
       adapter().replaceObject('todos', newObject).then(data => {
         expect(data).to.equal(newObject);
-        done()
       })
+      expect(cache.todos).to.eql([{id: 1, foo: 'foo'},{id: 5, woot: 'woot'}]);
+      done()
     })
 
     it ('adds an object to an empty store', function(done) {
-      const adapter   = storeAdapter({todos: []});
+      const cache     = {todos: []};
+      const adapter   = storeAdapter(cache);
       const newObject = {id: 5, woot: 'woot'};
 
       adapter().replaceObject('todos', newObject).then(data => {
         expect(data).to.equal(newObject);
-        done()
       })
+      expect(cache.todos).to.eql([newObject]);
+      done()
     })
 
     it ('adds an empty object to the store', function(done) {
-      const adapter   = storeAdapter({todos: []});
+      const cache     = {todos: []};
+      const adapter   = storeAdapter(cache);
       const emptyObject = {};
 
       adapter().replaceObject('todos', emptyObject).then(data => {
         expect(data).to.equal(emptyObject);
-        done()
       })
+      expect(cache.todos).to.eql([emptyObject]);
+      done()
     })
   })
 })

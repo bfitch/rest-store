@@ -16,10 +16,10 @@ describe('axiosAdapter', function() {
         const options = { root: true, model: false };
         const adapter = ajaxAdapter(mockAxios)(options);
 
-        return adapter.find('http://todos.com/3', {}, {}).then(data => {
+        adapter.find('http://todos.com/3', {}, {}).then(data => {
           expect(data).to.eql({id: 3, title: 'cool'})
-          done()
         })
+        done()
       })
 
       describe('root is true', function() {
@@ -34,12 +34,12 @@ describe('axiosAdapter', function() {
           const options = { root: true, model: false };
           const adapter = ajaxAdapter(mockAxios)(options);
 
-          return adapter.find('http://todos.com/3', {}, {}).catch(error => {
+          adapter.find('http://todos.com/3', {}, {}).catch(error => {
             expect(error.message).to.eql(
               'Expecting a root key in ajax response. But the response was empty.'
             )
-            done()
           })
+          done()
         })
       })
 
@@ -55,10 +55,10 @@ describe('axiosAdapter', function() {
           const options = { root: false, model: false };
           const adapter = ajaxAdapter(mockAxios)(options);
 
-          return adapter.find('http://todos.com/3', {}, {}).then(data => {
+          adapter.find('http://todos.com/3', {}, {}).then(data => {
             expect(data).to.eql({id: 3, title: 'cool'})
-            done()
           })
+          done()
         })
       })
     })
@@ -80,12 +80,12 @@ describe('axiosAdapter', function() {
         const options = {root: true, model: Todo};
         const adapter = ajaxAdapter(mockAxios)(options);
 
-        return adapter.find('http://todos.com/3', {}, {}).then(data => {
+        adapter.find('http://todos.com/3', {}, {}).then(data => {
           expect(data).to.be.an.instanceof(Todo);
           expect(data.id).to.eql(3);
           expect(data.title).to.eql('cool');
-          done()
         })
+        done()
       })
     })
   })

@@ -16,22 +16,23 @@ export default function (store = {}) {
       },
 
       replaceObject(path, object, id = identifier) {
-        return promisify(_replaceObject(store[path], object, id));
+        return promisify(_replaceObject(store, path, object, id));
       }
     }
-  }
-}
 
-function _replaceObject(cachedData, object, id) {
-  if (isEmpty(object)) {
-    cachedData.push(object);
-    return object;
-  } else {
-    const updatedData = cachedData.filter(item => {
-      return item[id] !== object[id];
-    });
-    updatedData.push(object);
-    return object;
+    function _replaceObject(store, path, object, id) {
+      if (isEmpty(object)) {
+        store[path].push(object);
+        return object;
+      } else {
+        const updatedData = store[path].filter(item => {
+          return item[id] !== object[id];
+        });
+        updatedData.push(object);
+        store[path] = updatedData;
+        return object;
+      }
+    }
   }
 }
 
