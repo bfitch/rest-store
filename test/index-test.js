@@ -56,9 +56,28 @@ describe('RESTstore Integration Tests', function() {
     })
 
     describe('data is not in the store', function() {
-      // it ('performs an ajax request and adds the data to the store', function(done) {
-      //
-      // })
+        mockServer
+          .get('/todos/5')
+          .reply(200, {todo: {id: 5, woot: 'woot' }});
+
+        const cache        = {todos: [{id: 1, a: 'a'}, {id: 3, c: 'c'}]};
+        const storeAdapter = jsStoreAdapter(cache)
+        const store        = RESTstore(mappings, storeAdapter)
+
+      it ('performs an ajax request and adds the data to the store', function(done) {
+        store.find('todos', {id: 5})
+          .then(data => {
+            expect(data).to.eql({id: 5, woot: 'woot' });
+          })
+          .then(() => {
+            expect(cache).to.eql({todos: [
+              {id: 1, a: 'a'},
+              {id: 3, c: 'c'},
+              {id: 5, woot: 'woot'}]
+            });
+          })
+          done()
+      })
     })
   })
 })

@@ -39,10 +39,10 @@ describe('plain JS storeAdapter', function() {
         it ('returns a promise that resolves to null', function(done) {
           const adapter = storeAdapter({todos: []});
 
-          return adapter().get('todos', {id: 1}).then(data => {
+          adapter().get('todos', {id: 1}).then(data => {
             expect(data).to.be.null
-            done()
           })
+          done()
         })
       })
 
@@ -52,10 +52,10 @@ describe('plain JS storeAdapter', function() {
             const data = [{id: 1, a: 'a'}, {id: 2, b: 'b'}];
             const adapter = storeAdapter({todos: data});
 
-            return adapter().get('todos', {id: 2}).then(data => {
+            adapter().get('todos', {id: 2}).then(data => {
               expect(data).to.eql({id: 2, b: 'b'});
-              done()
             })
+            done()
           })
         })
 
@@ -64,10 +64,10 @@ describe('plain JS storeAdapter', function() {
             const data    = [{id: 1, a: 'a'}, {id: 2, b: 'b'}];
             const adapter = storeAdapter({todos: data});
 
-            return adapter().get('todos', {id: 3}).then(data => {
+            adapter().get('todos', {id: 3}).then(data => {
               expect(data).to.be.null
-              done()
             })
+            done()
           })
         })
 
@@ -76,10 +76,10 @@ describe('plain JS storeAdapter', function() {
             const data    = [{id: 1, a: 'a'}, {id: 2, b: 'b'}];
             const adapter = storeAdapter({todos: data});
 
-            return adapter().get('todos', {id: 3}).then(data => {
+            adapter().get('todos', {id: 3}).then(data => {
               expect(data).to.be.null;
-              done()
             })
+            done()
           })
         })
 
@@ -89,8 +89,8 @@ describe('plain JS storeAdapter', function() {
 
             adapter().get('todo', {a: 'a'}).then(data => {
               expect(data).to.eql({id: 1, a: 'a'});
-              done()
             })
+            done()
           })
         })
 
@@ -105,11 +105,11 @@ describe('plain JS storeAdapter', function() {
               const data    = [new Todo(1), new Todo(2)];
               const adapter = storeAdapter({todos: data});
 
-              return adapter().get('todos', {id: 2}).then(data => {
+              adapter().get('todos', {id: 2}).then(data => {
                 expect(data).to.be.an.instanceof(Todo);
                 expect(data.id).to.be.eql(2);
-                done()
               })
+              done()
             })
           })
         })
@@ -128,12 +128,15 @@ describe('plain JS storeAdapter', function() {
 
     describe('store data is an array', function() {
       it ('appends new data to the array', function(done) {
-        const adapter = storeAdapter({todos: [{id: 1, a: 'a'}]});
+        const cache = {todos: [{id: 1, a: 'a'}]};
+        const adapter = storeAdapter(cache);
 
-        return adapter().add('todos', {id: 2, b: 'b'}).then(data => {
-          expect(data).to.eql([{id: 1, a: 'a'},{id: 2, b: 'b'}])
-          done()
+        adapter().add('todos', {id: 2, b: 'b'}).then(data => {
+          expect(data).to.eql({id: 2, b: 'b'})
+        }).then(() => {
+          expect(cache).to.eql({todos: [{id: 1, a: 'a'},{id: 2, b: 'b'}]})
         })
+        done()
       })
     })
 
@@ -141,10 +144,12 @@ describe('plain JS storeAdapter', function() {
       it ('replaces the store data with new data', function(done) {
         const adapter = storeAdapter({todo: {id: 1, a: 'a'}});
 
-        return adapter().add('todo', {id: 2, b: 'b'}).then(data => {
+        adapter().add('todo', {id: 2, b: 'b'}).then(data => {
           expect(data).to.eql({id: 2, b: 'b'})
-          done()
+        }).then(() => {
+          expect(cache).to.eql({todo: {id: 2, b: 'b'}})
         })
+        done()
       })
     })
   })

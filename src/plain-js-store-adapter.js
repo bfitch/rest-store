@@ -3,6 +3,8 @@ import {promisify,isEmpty} from './utils';
 export default function (store = {}) {
   return ({identifier = 'id'} = {}) => {
     return {
+      cache: store,
+
       get(path, query) {
         if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
         if (isEmpty(query)) throw new Error('You must provide a query when getting items from the store');
@@ -53,19 +55,19 @@ function queryStore(method, cachedData, query) {
   return isEmpty(result) ? null : result;
 }
 
+function _add(cachedData, newData) {
+  if (Array.isArray(cachedData)) {
+    cachedData.push(newData);
+    return newData;
+  } else {
+    return cachedData = newData;
+  }
+}
+
 function _parse(query) {
   const key   = Object.keys(query);
   const value = query[key];
   return [key,value];
-}
-
-function _add(cachedData, newData) {
-  if (Array.isArray(cachedData)) {
-    cachedData.push(newData);
-    return cachedData;
-  } else {
-    return cachedData = newData;
-  }
 }
 
 function _replace(cachedData, newData) {
