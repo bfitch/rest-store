@@ -65,18 +65,17 @@ describe('RESTstore Integration Tests', function() {
         const store        = RESTstore(mappings, storeAdapter)
 
       it ('performs an ajax request and adds the data to the store', function(done) {
-        store.find('todos', {id: 5})
-          .then(data => {
-            expect(data).to.eql({id: 5, woot: 'woot' });
-          })
-          .then(() => {
-            expect(cache).to.eql({todos: [
-              {id: 1, a: 'a'},
-              {id: 3, c: 'c'},
-              {id: 5, woot: 'woot'}]
-            });
-          })
-          done()
+        store.find('todos', {id: 5}).then(data => {
+          expect(data).to.eql({id: 5, woot: 'woot' });
+        })
+        .then(() => {
+          expect(cache).to.eql({todos: [
+            {id: 1, a: 'a'},
+            {id: 3, c: 'c'},
+            {id: 5, woot: 'woot'}]
+          });
+        })
+        done()
       })
     })
   })
