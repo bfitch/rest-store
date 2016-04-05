@@ -27,11 +27,10 @@ export default function (store = {}) {
         store[path].push(object);
         return object;
       } else {
-        const updatedData = store[path].filter(item => {
-          return item[id] !== object[id];
+        const index = store[path].findIndex(item => {
+          return item[id] === object[id];
         });
-        updatedData.push(object);
-        store[path] = updatedData;
+        store[path].splice(index, 1, object);
         return object;
       }
     }
