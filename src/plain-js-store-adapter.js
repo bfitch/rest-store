@@ -12,13 +12,36 @@ export default function (store = {}) {
         return promisify(queryStore('find', store[path], query));
       },
 
+      getCollection(path, query) {
+        if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
+        if (isEmpty(query)) throw new Error('You must provide a query when getting items from the store');
+
+        return promisify(queryStore('filter', store[path], query));
+      },
+
       add(path, data) {
         if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
         return promisify(_add(store[path], data));
       },
 
+      addCollection(path, data) {
+        if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
+        return promisify(_addCollection(store[path], data));
+      },
+
       replaceObject(path, object, id = identifier) {
+        if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
         return promisify(_replaceObject(store, path, object, id));
+      },
+
+      removeObject(path, clientQuery) {
+        if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
+        return promisify(_removeObject(store, path, clientQuery));
+      },
+
+      replace(path, data) {
+        if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
+        return promisify(_replace(store[path], data));
       }
     }
 
@@ -33,6 +56,15 @@ export default function (store = {}) {
         store[path].splice(index, 1, object);
         return object;
       }
+    }
+
+    function _removeObject(store, path, query) {
+      const [key,value] = _parse(query);
+
+      const index = store[path].findIndex(item => {
+        return item[key] === value;
+      });
+      return store[path].splice(index, 1);
     }
   }
 }
@@ -57,6 +89,15 @@ function queryStore(method, cachedData, query) {
 function _add(cachedData, newData) {
   if (Array.isArray(cachedData)) {
     cachedData.push(newData);
+    return newData;
+  } else {
+    return cachedData = newData;
+  }
+}
+
+function _addCollection(cachedData, newData) {
+  if (Array.isArray(cachedData)) {
+    cachedData = cachedData.concat(newData);
     return newData;
   } else {
     return cachedData = newData;

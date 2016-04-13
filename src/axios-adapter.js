@@ -7,6 +7,21 @@ export default function(axios = ajax) {
       find(url, params, headers) {
         const axiosOptions = {method: 'get', url, params, headers};
         return request(axiosOptions, options);
+      },
+
+      create(url, data, params, headers) {
+        const axiosOptions = {method: 'post', url, data, params, headers};
+        return request(axiosOptions, options);
+      },
+
+      update(url, data, params, headers) {
+        const axiosOptions = {method: 'put', url, data, params, headers};
+        return request(axiosOptions, options);
+      },
+
+      delete(url, params, headers) {
+        const axiosOptions = {method: 'delete', url, params, headers};
+        return request(axiosOptions, options);
       }
     }
 

@@ -37,3 +37,27 @@
 // describe('', () => {
 //   expect().to.be.ok
 // });
+
+Store stuff:
+
+{todos: null}
+{todos: []}
+{todos: [{}]}
+{todos: [{id: 1, foo: 'foo'}]}
+
+responses:
+null,
+[],
+[{}]
+[{id: 1, foo: 'foo'}]
+
+
+{todo: null}
+{todo: {}}
+{todo: {id: 1, foo: 'foo'}}
+
+responses:
+null,
+{},
+{id: 1, 'foo'},
+''
