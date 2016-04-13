@@ -1,6 +1,6 @@
 import {promisify,isEmpty} from './utils';
 
-export default function (store = {}) {
+export default function jsStoreAdapter(store = {}) {
   return ({identifier = 'id'} = {}) => {
     return {
       cache: store,
@@ -20,27 +20,22 @@ export default function (store = {}) {
       },
 
       add(path, data) {
-        if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
         return promisify(_add(store[path], data));
       },
 
-      addCollection(path, data) {
-        if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
-        return promisify(_addCollection(store[path], data));
+      mergeCollection(path, data, id = identifier) {
+        return promisify(_mergeCollection(store[path], data, id));
       },
 
       replaceObject(path, object, id = identifier) {
-        if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
         return promisify(_replaceObject(store, path, object, id));
       },
 
-      removeObject(path, clientQuery) {
-        if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
-        return promisify(_removeObject(store, path, clientQuery));
+      removeObject(path, attributes) {
+        return promisify(_removeObject(store, path, attributes));
       },
 
       replace(path, data) {
-        if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
         return promisify(_replace(store[path], data));
       }
     }
@@ -58,8 +53,25 @@ export default function (store = {}) {
       }
     }
 
-    function _removeObject(store, path, query) {
-      const [key,value] = _parse(query);
+    function _mergeCollection(cachedData, newCollection, identifier = 'id') {
+      const cached = cachedData.reduce((memo, object) => {
+        return Object.assign(memo, {[object[identifier]]: object});
+      },{});
+
+      const payload = newCollection.reduce((memo, object) => {
+        return Object.assign(memo, {[object[identifier]]: object});
+      },{});
+
+      const updated = Object.assign(cached, payload);
+
+      const newCache = Object.keys(updated).reduce((memo, key) => {
+        return memo.concat([updated[key]]);
+      },[]);
+      return _replace(cachedData, newCache);
+    }
+
+    function _removeObject(store, path, attrs) {
+      const [key,value] = _parse(attrs);
 
       const index = store[path].findIndex(item => {
         return item[key] === value;
@@ -89,15 +101,6 @@ function queryStore(method, cachedData, query) {
 function _add(cachedData, newData) {
   if (Array.isArray(cachedData)) {
     cachedData.push(newData);
-    return newData;
-  } else {
-    return cachedData = newData;
-  }
-}
-
-function _addCollection(cachedData, newData) {
-  if (Array.isArray(cachedData)) {
-    cachedData = cachedData.concat(newData);
     return newData;
   } else {
     return cachedData = newData;

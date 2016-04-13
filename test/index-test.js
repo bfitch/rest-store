@@ -79,4 +79,58 @@ describe('RESTstore Integration Tests', function() {
       })
     })
   })
+
+  // describe('findAll', function() {
+  //   const mappings = {
+  //     todos: {
+  //       url: 'http://todos.com/todos'
+  //     }
+  //   }
+  //
+  //   describe('data is in the store', function() {
+  //     const [a,b] = [{id: 1, a: 'a'}, {id: 3, c: 'c'}]
+  //     const storeAdapter = jsStoreAdapter({todos: [a,b]})
+  //     const store        = RESTstore(mappings, storeAdapter)
+  //
+  //     it ('returns a promise that resolves with the in-memory data', function(done) {
+  //       store.find('todos', {id: 1}).then(data => {
+  //         expect(data).to.equal(a)
+  //       })
+  //       done()
+  //     })
+  //
+  //     describe ('force is passed as an option', function() {
+  //       describe ('objects with same value are in the store', function() {
+  //         const response = [
+  //           {id: 1, c: 'c' },
+  //           {id: 2, c: 'c'},
+  //           {id: 3, c: 'd'}
+  //         ]
+  //         mockServer
+  //           .get('/todos')
+  //           .reply(200, {todos: response});
+  //
+  //         const cache        = {todos: [{id: 1, a: 'a'}, {id: 2, c: 'c'}]};
+  //         const [a,c]        = cache.todos;
+  //         const storeAdapter = jsStoreAdapter(cache)
+  //         const store        = RESTstore(mappings, storeAdapter)
+  //
+  //         it ('makes an ajax request, returns the object, replaces it in the store', function(done) {
+  //           store.findAll('todos',
+  //             {id: 3},
+  //             {force: true, params: {c: 'c'} }
+  //           ).then(data => {
+  //             expect(data).to.not.equal(c);
+  //             expect(data).to.eql(c);
+  //           });
+  //
+  //           expect(cache).to.eql({todos: response});
+  //           done()
+  //         })
+  //       })
+  //     })
+  //   })
+  //
+  //
+  // })
 })

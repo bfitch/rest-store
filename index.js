@@ -42,7 +42,7 @@ export default function(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) {
           if (data) return data;
 
           const fetchedData = ajax.find(url, params, headers);
-          return fetchedData.then(data => store.addCollection(path, data));
+          return fetchedData.then(data => store.mergeCollection(path, data));
         });
       }
     },
