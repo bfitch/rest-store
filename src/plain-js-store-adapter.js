@@ -20,11 +20,12 @@ export default function jsStoreAdapter(store = {}) {
       },
 
       add(path, data) {
+        if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
         return promisify(_add(store[path], data));
       },
 
       mergeCollection(path, data, id = identifier) {
-        return promisify(_mergeCollection(store[path], data, id));
+        return promisify(_mergeCollection(store, path, data, id));
       },
 
       replaceObject(path, object, id = identifier) {
@@ -36,7 +37,8 @@ export default function jsStoreAdapter(store = {}) {
       },
 
       replace(path, data) {
-        return promisify(_replace(store[path], data));
+        store[path] = data;
+        return promisify(store[path]);
       }
     }
 
@@ -53,7 +55,8 @@ export default function jsStoreAdapter(store = {}) {
       }
     }
 
-    function _mergeCollection(cachedData, newCollection, identifier = 'id') {
+    function _mergeCollection(store, path, newCollection, identifier = 'id') {
+      const cachedData = store[path];
       const cached = cachedData.reduce((memo, object) => {
         return Object.assign(memo, {[object[identifier]]: object});
       },{});
@@ -67,7 +70,8 @@ export default function jsStoreAdapter(store = {}) {
       const newCache = Object.keys(updated).reduce((memo, key) => {
         return memo.concat([updated[key]]);
       },[]);
-      return _replace(cachedData, newCache);
+      store[path] = newCache;
+      return store[path];
     }
 
     function _removeObject(store, path, attrs) {
