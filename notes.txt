@@ -1,3 +1,45 @@
+Chores
+
+1. Propogate promise errors! (re-raise in catch()? )
+
+2. Make axiosAdapter and plain-js-store-adapter Singletons?
+  - set runtime config (root, model, identifier) via API methods:
+    - `ajaxAdapter.setConfig({root: 'foo', model: 'bar'})`
+    - access config inside adapters from `this.identifier` or `this.root`
+
+3. Move storeAdapter and ajaxAdapter code and tests into separate files
+
+Tests
+
+1. Finish integration tests for: create, update, delete
+
+2. Tests for public store adapter methods
+
+3. Store: check models get instantiated on create and inserted into the store
+
+4. Test dynamic segments in parse-url
+
+5. Write big integration test script to make sure no bugs with Singleton state
+
+Features
+
+1. Merge find/findAll clientQuery into http params hash
+
+2. Expose raw store `cache` from store adapter
+
+3. Expose raw ajax lib (`http`) from axios adapter
+  - make sure you can set global config: headers, etc.
+
+4. Set global and per resource TTL (unix timestamp) cache busting
+
+
+-----------------------------
+v2.0
+
+- Integrate normalzr or handle normalizing data automatically?
+
+-------------------------------------------
+
 // REST API
 //
 // store.findAll('todos', attrs, prams);  // GET /todos?attrs     READ #index

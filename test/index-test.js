@@ -114,12 +114,14 @@ describe('RESTstore Integration Tests', function() {
           const storeAdapter = jsStoreAdapter(cache);
           const store        = RESTstore(mappings, storeAdapter)
 
-          it ('makes an ajax request, returns the object, replaces it in the store', function(done) {
+          // maybe want to do a request with query params and smart merge?
+          it ('makes an ajax request, returns the collection, replaces it in the store', function(done) {
             store.findAll('todos', {foo: 'aa'}, {force: true}).then(data => {
               expect(data).to.eql(response);
               expect(cache).to.eql({todos: response});
               done()
             })
+            .catch(error => { console.log(error) });
           })
         })
       })
@@ -160,6 +162,7 @@ describe('RESTstore Integration Tests', function() {
           ]});
           done()
         })
+        .catch(error => { console.log(error) });
       })
     })
   })

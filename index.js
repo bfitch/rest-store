@@ -41,14 +41,9 @@ export default function(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) {
         return store.getCollection(path, query).then(data => {
           if (data) return data;
 
-          const fetchedData = ajax.find(url, params, headers);
-          return fetchedData
+          return ajax.find(url, params, headers)
             .then(data => store.mergeCollection(path, data))
-            .then(data => {
-              const key   = Object.keys(query).pop();
-              const value = query[key];
-              return data.filter((item) => item[key] === value);
-            });
+            .then(data => store.queryStore('filter', data, query));
         });
       }
     },
