@@ -2,7 +2,7 @@ Chores
 
 1. Propogate promise errors! (re-raise in catch()? )
 
-2. Make axiosAdapter and plain-js-store-adapter Singletons?
+DONE! 2. Make axiosAdapter and plain-js-store-adapter Singletons?
   - set runtime config (root, model, identifier) via API methods:
     - `ajaxAdapter.setConfig({root: 'foo', model: 'bar'})`
     - access config inside adapters from `this.identifier` or `this.root`
@@ -24,8 +24,9 @@ Tests
 Features
 
 1. Merge find/findAll clientQuery into http params hash
+  - should be done in configuration.js
 
-2. Expose raw store `cache` from store adapter
+DONE! 2. Expose raw store `cache` from store adapter
 
 3. Expose raw ajax lib (`http`) from axios adapter
   - make sure you can set global config: headers, etc.

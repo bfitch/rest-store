@@ -1,13 +1,13 @@
 import {describe,it} from 'mocha'
 import {expect} from 'chai'
-import storeAdapter,{_replaceObject} from '../src/plain-js-store-adapter'
+import storeAdapter from '../src/plain-js-store-adapter'
 
 describe('plain JS storeAdapter', function() {
   describe('get', function() {
     it ('throws an error if the path is undefined', function() {
       const adapter = storeAdapter();
 
-      expect(() => adapter().get('todos')).to.throw(Error,
+      expect(() => adapter.get('todos')).to.throw(Error,
         "No path: 'todos' exists in the store"
       )
     })
@@ -17,7 +17,7 @@ describe('plain JS storeAdapter', function() {
         it ('throws an error', function() {
           const adapter = storeAdapter({todos: []});
 
-          expect(() => adapter().get('todos', {})).to.throw(Error,
+          expect(() => adapter.get('todos', {})).to.throw(Error,
             'You must provide a query when getting items from the store'
           )
         })
@@ -27,7 +27,7 @@ describe('plain JS storeAdapter', function() {
         it ('throws an error', function() {
           const adapter = storeAdapter({todos: []});
 
-          expect(() => adapter().get('todos')).to.throw(Error,
+          expect(() => adapter.get('todos')).to.throw(Error,
             'You must provide a query when getting items from the store'
           )
         })
@@ -39,7 +39,7 @@ describe('plain JS storeAdapter', function() {
         it ('returns a promise that resolves to null', function(done) {
           const adapter = storeAdapter({todos: []});
 
-          adapter().get('todos', {id: 1}).then(data => {
+          adapter.get('todos', {id: 1}).then(data => {
             expect(data).to.be.null
           })
           done()
@@ -52,7 +52,7 @@ describe('plain JS storeAdapter', function() {
             const data = [{id: 1, a: 'a'}, {id: 2, b: 'b'}];
             const adapter = storeAdapter({todos: data});
 
-            adapter().get('todos', {id: 2}).then(data => {
+            adapter.get('todos', {id: 2}).then(data => {
               expect(data).to.eql({id: 2, b: 'b'});
             })
             done()
@@ -64,7 +64,7 @@ describe('plain JS storeAdapter', function() {
             const data    = [{id: 1, a: 'a'}, {id: 2, b: 'b'}];
             const adapter = storeAdapter({todos: data});
 
-            adapter().get('todos', {id: 3}).then(data => {
+            adapter.get('todos', {id: 3}).then(data => {
               expect(data).to.be.null
             })
             done()
@@ -76,7 +76,7 @@ describe('plain JS storeAdapter', function() {
             const data    = [{id: 1, a: 'a'}, {id: 2, b: 'b'}];
             const adapter = storeAdapter({todos: data});
 
-            adapter().get('todos', {id: 3}).then(data => {
+            adapter.get('todos', {id: 3}).then(data => {
               expect(data).to.be.null;
             })
             done()
@@ -87,7 +87,7 @@ describe('plain JS storeAdapter', function() {
           it ('returns the correct object', function(done) {
             const adapter = storeAdapter({todo: {id: 1, a: 'a'}});
 
-            adapter().get('todo', {a: 'a'}).then(data => {
+            adapter.get('todo', {a: 'a'}).then(data => {
               expect(data).to.eql({id: 1, a: 'a'});
             })
             done()
@@ -105,7 +105,7 @@ describe('plain JS storeAdapter', function() {
               const data    = [new Todo(1), new Todo(2)];
               const adapter = storeAdapter({todos: data});
 
-              adapter().get('todos', {id: 2}).then(data => {
+              adapter.get('todos', {id: 2}).then(data => {
                 expect(data).to.be.an.instanceof(Todo);
                 expect(data.id).to.be.eql(2);
               })
@@ -121,7 +121,7 @@ describe('plain JS storeAdapter', function() {
     it ('throws an error if the path is undefined', function() {
       const adapter = storeAdapter();
 
-      expect(() => adapter().add('todos')).to.throw(Error,
+      expect(() => adapter.add('todos')).to.throw(Error,
         "No path: 'todos' exists in the store"
       )
     })
@@ -131,7 +131,7 @@ describe('plain JS storeAdapter', function() {
         const cache = {todos: [{id: 1, a: 'a'}]};
         const adapter = storeAdapter(cache);
 
-        adapter().add('todos', {id: 2, b: 'b'}).then(data => {
+        adapter.add('todos', {id: 2, b: 'b'}).then(data => {
           expect(data).to.eql({id: 2, b: 'b'})
         }).then(() => {
           expect(cache).to.eql({todos: [{id: 1, a: 'a'},{id: 2, b: 'b'}]})
@@ -144,7 +144,7 @@ describe('plain JS storeAdapter', function() {
       it ('replaces the store data with new data', function(done) {
         const adapter = storeAdapter({todo: {id: 1, a: 'a'}});
 
-        adapter().add('todo', {id: 2, b: 'b'}).then(data => {
+        adapter.add('todo', {id: 2, b: 'b'}).then(data => {
           expect(data).to.eql({id: 2, b: 'b'})
         }).then(() => {
           expect(cache).to.eql({todo: {id: 2, b: 'b'}})
@@ -160,7 +160,7 @@ describe('plain JS storeAdapter', function() {
       const adapter   = storeAdapter(cache);
       const newObject = {id: 5, woot: 'woot'};
 
-      adapter().replaceObject('todos', newObject).then(data => {
+      adapter.replaceObject('todos', newObject).then(data => {
         expect(data).to.equal(newObject);
       })
       expect(cache.todos).to.eql([{id: 1, foo: 'foo'},{id: 5, woot: 'woot'}]);
@@ -172,7 +172,7 @@ describe('plain JS storeAdapter', function() {
       const adapter   = storeAdapter(cache);
       const newObject = {id: 5, woot: 'woot'};
 
-      adapter().replaceObject('todos', newObject).then(data => {
+      adapter.replaceObject('todos', newObject).then(data => {
         expect(data).to.equal(newObject);
       })
       expect(cache.todos).to.eql([newObject]);
@@ -184,7 +184,7 @@ describe('plain JS storeAdapter', function() {
       const adapter   = storeAdapter(cache);
       const emptyObject = {};
 
-      adapter().replaceObject('todos', emptyObject).then(data => {
+      adapter.replaceObject('todos', emptyObject).then(data => {
         expect(data).to.equal(emptyObject);
       })
       expect(cache.todos).to.eql([emptyObject]);
@@ -208,7 +208,7 @@ describe('plain JS storeAdapter', function() {
       const cache   = {todos: cached};
       const adapter = storeAdapter(cache);
 
-      adapter().mergeCollection('todos', newCollection).then(data => {
+      adapter.mergeCollection('todos', newCollection).then(data => {
         expect(data).to.eql([
           {id: 1, title: 'big'},
           {id: 2, title: 'bigger'},

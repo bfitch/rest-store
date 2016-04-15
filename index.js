@@ -5,23 +5,26 @@ export default function(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) {
   if (!storeAdapter) throw new Error('No storeAdapter. You must provide an in-memory store')
 
   return {
+    store: storeAdapter,
+    ajax: ajaxAdapter,
+
     find(path, clientQuery, httpOptions) {
       const options = config('find', path, clientQuery, httpOptions, mappings);
       const {url, root, params, headers, force, model, query, identifier} = options;
 
-      const ajax  = ajaxAdapter({root, model});
-      const store = storeAdapter({identifier});
+      this.ajax.setConfig({root, model});
+      this.store.setConfig({identifier});
 
       if (force) {
-        return ajax.find(url, params, headers).then(fetchedData => {
-          return store.replaceObject(path, fetchedData);
+        return this.ajax.find(url, params, headers).then(fetchedData => {
+          return this.store.replaceObject(path, fetchedData);
         });
       } else {
-        return store.get(path, query).then(data => {
+        return this.store.get(path, query).then(data => {
           if (data) return data;
 
-          const fetchedData = ajax.find(url, params, headers);
-          return fetchedData.then(data => store.add(path, data));
+          const fetchedData = this.ajax.find(url, params, headers);
+          return fetchedData.then(data => this.store.add(path, data));
         });
       }
     },
@@ -30,20 +33,20 @@ export default function(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) {
       const options = config('findAll', path, clientQuery, httpOptions, mappings);
       const {url, root, params, headers, force, model, query, identifier} = options;
 
-      const ajax  = ajaxAdapter({root, model});
-      const store = storeAdapter({identifier});
+      this.ajax.setConfig({root, model});
+      this.store.setConfig({identifier});
 
       if (force) {
-        return ajax.find(url, params, headers).then(fetchedData => {
-          return store.replace(path, fetchedData);
+        return this.ajax.find(url, params, headers).then(fetchedData => {
+          return this.store.replace(path, fetchedData);
         });
       } else {
-        return store.getCollection(path, query).then(data => {
+        return this.store.getCollection(path, query).then(data => {
           if (data) return data;
 
-          return ajax.find(url, params, headers)
-            .then(data => store.mergeCollection(path, data))
-            .then(data => store.queryStore('filter', data, query));
+          return this.ajax.find(url, params, headers)
+            .then(data => this.store.mergeCollection(path, data))
+            .then(data => this.store.queryStore('filter', data, query));
         });
       }
     },

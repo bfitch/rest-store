@@ -14,7 +14,8 @@ describe('axiosAdapter', function() {
     describe('no model passed in', function() {
       it ('makes an ajax request and returns the correct data', function(done) {
         const options = { root: true, model: false };
-        const adapter = ajaxAdapter(mockAxios)(options);
+        const adapter = ajaxAdapter(mockAxios);
+        adapter.setConfig(options);
 
         adapter.find('http://todos.com/3', {}, {}).then(data => {
           expect(data).to.eql({id: 3, title: 'cool'})
@@ -32,7 +33,8 @@ describe('axiosAdapter', function() {
 
         it ('throws an error if response has not root key', function(done) {
           const options = { root: true, model: false };
-          const adapter = ajaxAdapter(mockAxios)(options);
+          const adapter = ajaxAdapter(mockAxios);
+          adapter.setConfig(options);
 
           adapter.find('http://todos.com/3', {}, {}).catch(error => {
             expect(error.message).to.eql(
@@ -53,7 +55,8 @@ describe('axiosAdapter', function() {
 
         it ('makes an ajax request and returns the correct data', function(done) {
           const options = { root: false, model: false };
-          const adapter = ajaxAdapter(mockAxios)(options);
+          const adapter = ajaxAdapter(mockAxios);
+          adapter.setConfig(options);
 
           adapter.find('http://todos.com/3', {}, {}).then(data => {
             expect(data).to.eql({id: 3, title: 'cool'})
@@ -78,7 +81,8 @@ describe('axiosAdapter', function() {
 
       it ('instantiates the model and inserts it in the store', function(done) {
         const options = {root: true, model: Todo};
-        const adapter = ajaxAdapter(mockAxios)(options);
+        const adapter = ajaxAdapter(mockAxios);
+        adapter.setConfig(options);
 
         adapter.find('http://todos.com/3', {}, {}).then(data => {
           expect(data).to.be.an.instanceof(Todo);

@@ -1,103 +1,109 @@
 import {promisify,isEmpty} from './utils';
 
 export default function jsStoreAdapter(store = {}) {
-  return ({identifier = 'id'} = {}) => {
-    return {
-      cache: store,
+  return {
+    cache: store,
 
-      get(path, query) {
-        if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
-        if (isEmpty(query)) throw new Error('You must provide a query when getting items from the store');
+    identifier: 'id',
 
-        return promisify(this.queryStore('find', store[path], query));
-      },
+    setConfig({identifier}) {
+      this.identifier = identifier;
+    },
 
-      getCollection(path, query) {
-        if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
-        if (isEmpty(query)) throw new Error('You must provide a query when getting items from the store');
+    get(path, query) {
+      if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
+      if (isEmpty(query)) throw new Error('You must provide a query when getting items from the store');
 
-        return promisify(this.queryStore('filter', store[path], query));
-      },
+      return promisify(this.queryStore('find', store[path], query));
+    },
 
-      add(path, data) {
-        if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
-        return promisify(_add(store[path], data));
-      },
+    getCollection(path, query) {
+      if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
+      if (isEmpty(query)) throw new Error('You must provide a query when getting items from the store');
 
-      mergeCollection(path, data, id = identifier) {
-        return promisify(_mergeCollection(store, path, data, id));
-      },
+      return promisify(this.queryStore('filter', store[path], query));
+    },
 
-      replaceObject(path, object, id = identifier) {
-        return promisify(_replaceObject(store, path, object, id));
-      },
+    add(path, data) {
+      if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
+      return promisify(_add(store[path], data));
+    },
 
-      removeObject(path, attributes) {
-        return promisify(_removeObject(store, path, attributes));
-      },
+    mergeCollection(path, data, id) {
+      const identifier = id || this.identifier;
+      return promisify(_mergeCollection(store, path, data, identifier));
+    },
 
-      replace(path, data) {
-        store[path] = data;
-        return promisify(store[path]);
-      },
+    replaceObject(path, object, id) {
+      const identifier = id || this.identifier;
+      return promisify(_replaceObject(store, path, object, identifier));
+    },
 
-      queryStore(method, cachedData, query) {
-        if (isEmpty(cachedData)) return null;
+    removeObject(path, attributes) {
+      return promisify(_removeObject(store, path, attributes));
+    },
 
-        let result;
-        const [key,value] = _parse(query);
+    replace(path, data) {
+      store[path] = data;
+      return promisify(store[path]);
+    },
 
-        if (Array.isArray(cachedData)) {
-          result = cachedData[method].call(cachedData, (item) => item[key] === value);
-        } else {
-          const msg = `Data at this path is not iterable. Is of type: ${typeof cachedData}`;
-          if (method === 'filter') throw new Error(msg);
-          result = (cachedData[key] === value) ? cachedData : null;
-        }
-        return isEmpty(result) ? null : result;
-      }
-    }
+    queryStore(method, cachedData, query) {
+      if (isEmpty(cachedData)) return null;
 
-    function _replaceObject(store, path, object, id) {
-      if (isEmpty(object)) {
-        store[path].push(object);
-        return object;
+      let result;
+      const [key,value] = _parse(query);
+
+      if (Array.isArray(cachedData)) {
+        result = cachedData[method].call(cachedData, (item) => item[key] === value);
       } else {
-        const index = store[path].findIndex(item => {
-          return item[id] === object[id];
-        });
-        store[path].splice(index, 1, object);
-        return object;
+        const msg = `Data at this path is not iterable. Is of type: ${typeof cachedData}`;
+        if (method === 'filter') throw new Error(msg);
+        result = (cachedData[key] === value) ? cachedData : null;
       }
+      return isEmpty(result) ? null : result;
     }
+  }
 
-    function _mergeCollection(store, path, newCollection, identifier = 'id') {
-      const cachedData = store[path];
-      const cached = cachedData.reduce((memo, object) => {
-        return Object.assign(memo, {[object[identifier]]: object});
-      },{});
-
-      const payload = newCollection.reduce((memo, object) => {
-        return Object.assign(memo, {[object[identifier]]: object});
-      },{});
-
-      const updated = Object.assign(cached, payload);
-
-      const newCache = Object.keys(updated).reduce((memo, key) => {
-        return memo.concat([updated[key]]);
-      },[]);
-      store[path] = newCache;
-      return store[path];
-    }
-
-    function _removeObject(store, path, attrs) {
-      const [key,value] = _parse(attrs);
-
+  function _replaceObject(store, path, object, id) {
+    if (isEmpty(object)) {
+      store[path].push(object);
+      return object;
+    } else {
       const index = store[path].findIndex(item => {
-        return item[key] === value;
+        return item[id] === object[id];
       });
-      return store[path].splice(index, 1);
+      store[path].splice(index, 1, object);
+      return object;
     }
+  }
+
+  function _mergeCollection(store, path, newCollection, identifier = 'id') {
+    const cachedData = store[path];
+    const cached = cachedData.reduce((memo, object) => {
+      return Object.assign(memo, {[object[identifier]]: object});
+    },{});
+
+    const payload = newCollection.reduce((memo, object) => {
+      return Object.assign(memo, {[object[identifier]]: object});
+    },{});
+
+    const updated = Object.assign(cached, payload);
+
+    const newCache = Object.keys(updated).reduce((memo, key) => {
+      return memo.concat([updated[key]]);
+    },[]);
+    store[path] = newCache;
+    return store[path];
+  }
+
+  function _removeObject(store, path, attrs) {
+    const [key,value] = _parse(attrs);
+
+    const index = store[path].findIndex(item => {
+      return item[key] === value;
+    });
+    return store[path].splice(index, 1);
   }
 }
 
