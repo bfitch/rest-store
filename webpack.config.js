@@ -1,11 +1,13 @@
+var path = require('path');
+
 module.exports = {
-  entry: {
-    app: ["./index.js"]
-  },
+  entry: __dirname + '/index.js',
   output: {
-    library: 'nodePrototyper',
-    libraryTarget: 'commonjs2',
-    filename: 'dist/index.js'
+    path: __dirname + '/dist',
+    library: 'restStore',
+    libraryTarget: 'umd',
+    filename: 'index.js',
+    umdNamedDefine: true
   },
   module: {
     loaders: [
@@ -14,7 +16,7 @@ module.exports = {
         exclude: /node_modules/,
         loader: "babel",
         query: {
-          presets: ['es2015', 'react', 'stage-0']
+          presets: ['es2015', 'stage-0']
         }
       }
     ]
