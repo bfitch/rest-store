@@ -5,6 +5,8 @@ export default function(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) {
   if (!storeAdapter) throw new Error('No storeAdapter. You must provide an in-memory store')
 
   return {
+    cache: storeAdapter.cache,
+    http: ajaxAdapter.ajax,
     store: storeAdapter,
     ajax: ajaxAdapter,
 
