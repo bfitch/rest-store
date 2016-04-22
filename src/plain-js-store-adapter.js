@@ -1,9 +1,8 @@
 import {promisify,isEmpty} from './utils';
 
-export default function jsStoreAdapter(store = {}) {
+export default function(store = {}) {
   return {
     cache: store,
-
     identifier: 'id',
 
     setConfig({identifier}) {
