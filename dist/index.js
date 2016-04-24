@@ -2,11 +2,11 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define("restStore", [], factory);
+		define([], factory);
 	else if(typeof exports === 'object')
-		exports["restStore"] = factory();
+		exports["RestStore"] = factory();
 	else
-		root["restStore"] = factory();
+		root["RestStore"] = factory();
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -59,21 +59,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.jsStoreAdapter = undefined;
+	exports.restStore = restStore;
 
-	exports.default = function (mappings, storeAdapter) {
+	var _axiosAdapter = __webpack_require__(1);
+
+	var _axiosAdapter2 = _interopRequireDefault(_axiosAdapter);
+
+	var _plainJsStoreAdapter = __webpack_require__(21);
+
+	var _plainJsStoreAdapter2 = _interopRequireDefault(_plainJsStoreAdapter);
+
+	var _configuration = __webpack_require__(22);
+
+	var _configuration2 = _interopRequireDefault(_configuration);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function restStore(mappings, storeAdapter) {
 	  var ajaxAdapter = arguments.length <= 2 || arguments[2] === undefined ? (0, _axiosAdapter2.default)() : arguments[2];
 
 	  if (!storeAdapter) throw new Error('No storeAdapter. You must provide an in-memory store');
 
 	  return {
 	    cache: storeAdapter.cache,
-	    http: ajaxAdapter.ajax,
-	    store: storeAdapter,
-	    ajax: ajaxAdapter,
+	    http: ajaxAdapter.http,
 
 	    find: function find(path, clientQuery, httpOptions) {
-	      var _this = this;
-
 	      var options = (0, _configuration2.default)('find', path, clientQuery, httpOptions, mappings);
 	      var url = options.url;
 	      var root = options.root;
@@ -85,27 +97,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var identifier = options.identifier;
 
 
-	      this.ajax.setConfig({ root: root, model: model });
-	      this.store.setConfig({ identifier: identifier });
+	      ajaxAdapter.setConfig({ root: root, model: model });
+	      storeAdapter.setConfig({ identifier: identifier });
 
 	      if (force) {
-	        return this.ajax.find(url, params, headers).then(function (fetchedData) {
-	          return _this.store.replaceObject(path, fetchedData);
+	        return ajaxAdapter.find(url, params, headers).then(function (fetchedData) {
+	          return storeAdapter.replaceObject(path, fetchedData);
 	        });
 	      } else {
-	        return this.store.get(path, query).then(function (data) {
+	        return storeAdapter.get(path, query).then(function (data) {
 	          if (data) return data;
 
-	          var fetchedData = _this.ajax.find(url, params, headers);
+	          var fetchedData = ajaxAdapter.find(url, params, headers);
 	          return fetchedData.then(function (data) {
-	            return _this.store.add(path, data);
+	            return storeAdapter.add(path, data);
 	          });
 	        });
 	      }
 	    },
 	    findAll: function findAll(path, clientQuery, httpOptions) {
-	      var _this2 = this;
-
 	      var options = (0, _configuration2.default)('findAll', path, clientQuery, httpOptions, mappings);
 	      var url = options.url;
 	      var root = options.root;
@@ -117,21 +127,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var identifier = options.identifier;
 
 
-	      this.ajax.setConfig({ root: root, model: model });
-	      this.store.setConfig({ identifier: identifier });
+	      ajaxAdapter.setConfig({ root: root, model: model });
+	      storeAdapter.setConfig({ identifier: identifier });
 
 	      if (force) {
-	        return this.ajax.find(url, params, headers).then(function (fetchedData) {
-	          return _this2.store.replace(path, fetchedData);
+	        return ajaxAdapter.find(url, params, headers).then(function (fetchedData) {
+	          return storeAdapter.replace(path, fetchedData);
 	        });
 	      } else {
-	        return this.store.getCollection(path, query).then(function (data) {
+	        return storeAdapter.getCollection(path, query).then(function (data) {
 	          if (data) return data;
 
-	          return _this2.ajax.find(url, params, headers).then(function (data) {
-	            return _this2.store.mergeCollection(path, data);
+	          return ajaxAdapter.find(url, params, headers).then(function (data) {
+	            return storeAdapter.mergeCollection(path, data);
 	          }).then(function (data) {
-	            return _this2.store.queryStore('filter', data, query);
+	            return storeAdapter.queryStore('filter', data, query);
 	          });
 	        });
 	      }
@@ -188,17 +198,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	    }
 	  };
-	};
+	}
 
-	var _axiosAdapter = __webpack_require__(1);
-
-	var _axiosAdapter2 = _interopRequireDefault(_axiosAdapter);
-
-	var _configuration = __webpack_require__(21);
-
-	var _configuration2 = _interopRequireDefault(_configuration);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	exports.jsStoreAdapter = _plainJsStoreAdapter2.default;
 
 /***/ },
 /* 1 */
@@ -1502,6 +1504,159 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+	exports.default = function () {
+	  var store = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	  return {
+	    cache: store,
+	    identifier: 'id',
+
+	    setConfig: function setConfig(_ref) {
+	      var identifier = _ref.identifier;
+
+	      this.identifier = identifier;
+	    },
+	    get: function get(path, query) {
+	      if (store[path] === undefined) throw new Error('No path: \'' + path + '\' exists in the store');
+	      if ((0, _utils.isEmpty)(query)) throw new Error('You must provide a query when getting items from the store');
+
+	      return (0, _utils.promisify)(this.queryStore('find', store[path], query));
+	    },
+	    getCollection: function getCollection(path, query) {
+	      if (store[path] === undefined) throw new Error('No path: \'' + path + '\' exists in the store');
+	      // if (isEmpty(query)) throw new Error('You must provide a query when getting items from the store');
+
+	      return (0, _utils.promisify)(this.queryStore('filter', store[path], query));
+	    },
+	    add: function add(path, data) {
+	      if (store[path] === undefined) throw new Error('No path: \'' + path + '\' exists in the store');
+	      return (0, _utils.promisify)(_add(store[path], data));
+	    },
+	    mergeCollection: function mergeCollection(path, data, id) {
+	      var identifier = id || this.identifier;
+	      return (0, _utils.promisify)(_mergeCollection(store, path, data, identifier));
+	    },
+	    replaceObject: function replaceObject(path, object, id) {
+	      var identifier = id || this.identifier;
+	      return (0, _utils.promisify)(_replaceObject(store, path, object, identifier));
+	    },
+	    removeObject: function removeObject(path, attributes) {
+	      return (0, _utils.promisify)(_removeObject(store, path, attributes));
+	    },
+	    replace: function replace(path, data) {
+	      store[path] = data;
+	      return (0, _utils.promisify)(store[path]);
+	    },
+	    queryStore: function queryStore(method, cachedData, query) {
+	      if ((0, _utils.isEmpty)(cachedData)) return null;
+	      if ((0, _utils.isEmpty)(query)) return (0, _utils.isEmpty)(cachedData) ? null : cachedData;
+
+	      var result = void 0;
+
+	      var _parse2 = _parse(query);
+
+	      var _parse3 = _slicedToArray(_parse2, 2);
+
+	      var key = _parse3[0];
+	      var value = _parse3[1];
+
+
+	      if (Array.isArray(cachedData)) {
+	        result = cachedData[method].call(cachedData, function (item) {
+	          return item[key] === value;
+	        });
+	      } else {
+	        var msg = 'Data at this path is not iterable. Is of type: ' + (typeof cachedData === 'undefined' ? 'undefined' : _typeof(cachedData));
+	        if (method === 'filter') throw new Error(msg);
+	        result = cachedData[key] === value ? cachedData : null;
+	      }
+	      return (0, _utils.isEmpty)(result) ? null : result;
+	    }
+	  };
+
+	  function _replaceObject(store, path, object, id) {
+	    if ((0, _utils.isEmpty)(object)) {
+	      store[path].push(object);
+	      return object;
+	    } else {
+	      var index = store[path].findIndex(function (item) {
+	        return item[id] === object[id];
+	      });
+	      store[path].splice(index, 1, object);
+	      return object;
+	    }
+	  }
+
+	  function _mergeCollection(store, path, newCollection) {
+	    var identifier = arguments.length <= 3 || arguments[3] === undefined ? 'id' : arguments[3];
+
+	    var cachedData = store[path];
+	    var cached = cachedData.reduce(function (memo, object) {
+	      return Object.assign(memo, _defineProperty({}, object[identifier], object));
+	    }, {});
+
+	    var payload = newCollection.reduce(function (memo, object) {
+	      return Object.assign(memo, _defineProperty({}, object[identifier], object));
+	    }, {});
+
+	    var updated = Object.assign(cached, payload);
+
+	    var newCache = Object.keys(updated).reduce(function (memo, key) {
+	      return memo.concat([updated[key]]);
+	    }, []);
+	    store[path] = newCache;
+	    return store[path];
+	  }
+
+	  function _removeObject(store, path, attrs) {
+	    var _parse4 = _parse(attrs);
+
+	    var _parse5 = _slicedToArray(_parse4, 2);
+
+	    var key = _parse5[0];
+	    var value = _parse5[1];
+
+
+	    var index = store[path].findIndex(function (item) {
+	      return item[key] === value;
+	    });
+	    return store[path].splice(index, 1);
+	  }
+	};
+
+	var _utils = __webpack_require__(20);
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	function _add(cachedData, newData) {
+	  if (Array.isArray(cachedData)) {
+	    cachedData.push(newData);
+	    return newData;
+	  } else {
+	    return cachedData = newData;
+	  }
+	}
+
+	function _parse(query) {
+	  var key = Object.keys(query);
+	  var value = query[key];
+	  return [key, value];
+	}
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
 	exports.default = function (method, path) {
 	  var query = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 	  var httpOptions = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
@@ -1554,7 +1709,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	};
 
-	var _parseUrl = __webpack_require__(22);
+	var _parseUrl = __webpack_require__(23);
 
 	var _parseUrl2 = _interopRequireDefault(_parseUrl);
 
@@ -1563,7 +1718,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1573,11 +1728,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.default = parseUrl;
 
-	var _pathToRegexp = __webpack_require__(23);
+	var _pathToRegexp = __webpack_require__(24);
 
 	var _pathToRegexp2 = _interopRequireDefault(_pathToRegexp);
 
-	var _urlParse = __webpack_require__(25);
+	var _urlParse = __webpack_require__(26);
 
 	var _urlParse2 = _interopRequireDefault(_urlParse);
 
@@ -1601,10 +1756,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isarray = __webpack_require__(24)
+	var isarray = __webpack_require__(25)
 
 	/**
 	 * Expose `pathToRegexp`.
@@ -1997,7 +2152,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 	module.exports = Array.isArray || function (arr) {
@@ -2006,14 +2161,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var required = __webpack_require__(26)
-	  , lolcation = __webpack_require__(27)
-	  , qs = __webpack_require__(28)
+	var required = __webpack_require__(27)
+	  , lolcation = __webpack_require__(28)
+	  , qs = __webpack_require__(29)
 	  , relativere = /^\/(?!\/)/;
 
 	/**
@@ -2240,7 +2395,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2284,10 +2439,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	/**
 	 * These properties should not be copied or inherited from. This is only needed
@@ -2314,7 +2469,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	module.exports = function lolcation(loc) {
 	  loc = loc || global.location || {};
-	  URL = URL || __webpack_require__(25);
+	  URL = URL || __webpack_require__(26);
 
 	  var finaldestination = {}
 	    , type = typeof loc
@@ -2333,10 +2488,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return finaldestination;
 	};
 
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports) {
 
 	'use strict';

@@ -1,32 +1,31 @@
 import axiosAdapter from './src/axios-adapter';
+import jsStoreAdapter from './src/plain-js-store-adapter';
 import config from './src/configuration';
 
-export default function(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) {
+export function restStore(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) {
   if (!storeAdapter) throw new Error('No storeAdapter. You must provide an in-memory store')
 
   return {
     cache: storeAdapter.cache,
-    http: ajaxAdapter.ajax,
-    store: storeAdapter,
-    ajax: ajaxAdapter,
+    http: ajaxAdapter.http,
 
     find(path, clientQuery, httpOptions) {
       const options = config('find', path, clientQuery, httpOptions, mappings);
       const {url, root, params, headers, force, model, query, identifier} = options;
 
-      this.ajax.setConfig({root, model});
-      this.store.setConfig({identifier});
+      ajaxAdapter.setConfig({root, model});
+      storeAdapter.setConfig({identifier});
 
       if (force) {
-        return this.ajax.find(url, params, headers).then(fetchedData => {
-          return this.store.replaceObject(path, fetchedData);
+        return ajaxAdapter.find(url, params, headers).then(fetchedData => {
+          return storeAdapter.replaceObject(path, fetchedData);
         });
       } else {
-        return this.store.get(path, query).then(data => {
+        return storeAdapter.get(path, query).then(data => {
           if (data) return data;
 
-          const fetchedData = this.ajax.find(url, params, headers);
-          return fetchedData.then(data => this.store.add(path, data));
+          const fetchedData = ajaxAdapter.find(url, params, headers);
+          return fetchedData.then(data => storeAdapter.add(path, data));
         });
       }
     },
@@ -35,20 +34,20 @@ export default function(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) {
       const options = config('findAll', path, clientQuery, httpOptions, mappings);
       const {url, root, params, headers, force, model, query, identifier} = options;
 
-      this.ajax.setConfig({root, model});
-      this.store.setConfig({identifier});
+      ajaxAdapter.setConfig({root, model});
+      storeAdapter.setConfig({identifier});
 
       if (force) {
-        return this.ajax.find(url, params, headers).then(fetchedData => {
-          return this.store.replace(path, fetchedData);
+        return ajaxAdapter.find(url, params, headers).then(fetchedData => {
+          return storeAdapter.replace(path, fetchedData);
         });
       } else {
-        return this.store.getCollection(path, query).then(data => {
+        return storeAdapter.getCollection(path, query).then(data => {
           if (data) return data;
 
-          return this.ajax.find(url, params, headers)
-            .then(data => this.store.mergeCollection(path, data))
-            .then(data => this.store.queryStore('filter', data, query));
+          return ajaxAdapter.find(url, params, headers)
+            .then(data => storeAdapter.mergeCollection(path, data))
+            .then(data => storeAdapter.queryStore('filter', data, query));
         });
       }
     },
@@ -91,3 +90,5 @@ export default function(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) {
     }
   }
 }
+
+export {jsStoreAdapter};

@@ -18,7 +18,7 @@ export default function(store = {}) {
 
     getCollection(path, query) {
       if (store[path] === undefined) throw new Error(`No path: '${path}' exists in the store`);
-      if (isEmpty(query)) throw new Error('You must provide a query when getting items from the store');
+      // if (isEmpty(query)) throw new Error('You must provide a query when getting items from the store');
 
       return promisify(this.queryStore('filter', store[path], query));
     },
@@ -49,6 +49,7 @@ export default function(store = {}) {
 
     queryStore(method, cachedData, query) {
       if (isEmpty(cachedData)) return null;
+      if (isEmpty(query)) return isEmpty(cachedData) ? null : cachedData;
 
       let result;
       const [key,value] = _parse(query);

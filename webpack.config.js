@@ -2,13 +2,12 @@ var path = require('path');
 
 module.exports = {
   entry: __dirname + '/index.js',
-  output: {
+	output: {
     path: __dirname + '/dist',
-    library: 'restStore',
-    libraryTarget: 'umd',
-    filename: 'index.js',
-    umdNamedDefine: true
-  },
+		filename: "index.js",
+		library: "RestStore",
+		libraryTarget: "umd"
+	},
   module: {
     loaders: [
       {
@@ -23,5 +22,8 @@ module.exports = {
   },
   resolve: {
     extensions: ["", ".js"]
+  },
+  node: {
+    global: false
   }
-};
+}
