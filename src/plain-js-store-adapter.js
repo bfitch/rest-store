@@ -48,19 +48,26 @@ export default function(store = {}) {
     },
 
     queryStore(method, cachedData, query) {
+      let result;
       if (isEmpty(cachedData)) return null;
       if (isEmpty(query)) return isEmpty(cachedData) ? null : cachedData;
 
-      let result;
-      const [key,value] = _parse(query);
-
       if (Array.isArray(cachedData)) {
-        result = cachedData[method].call(cachedData, (item) => item[key] === value);
+        result = cachedData[method].call(cachedData, (item) => {
+          return Object.keys(query).reduce((bool, queryKey) => {
+            return bool && (item[queryKey] === query[queryKey]);
+          },true);
+        });
       } else {
         const msg = `Data at this path is not iterable. Is of type: ${typeof cachedData}`;
         if (method === 'filter') throw new Error(msg);
-        result = (cachedData[key] === value) ? cachedData : null;
+
+        const check = Object.keys(query).reduce((bool, queryKey) => {
+          return bool && (cachedData[queryKey] === query[queryKey]);
+        },true);
+        result = check ? cachedData : null;
       }
+
       return isEmpty(result) ? null : result;
     }
   }
