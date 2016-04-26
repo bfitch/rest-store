@@ -36,61 +36,56 @@ describe('plain JS storeAdapter', function() {
 
     describe('query argument provided', function() {
       describe('no data in the store', function() {
-        it ('returns a promise that resolves to null', function(done) {
+        it ('returns a promise that resolves to null', function() {
           const adapter = storeAdapter({todos: []});
 
-          adapter.get('todos', {id: 1}).then(data => {
+          return adapter.get('todos', {id: 1}).then(data => {
             expect(data).to.be.null
           })
-          done()
         })
       })
 
       describe('data in the store', function() {
         describe('object exists with matching attributes', function() {
-          it ('returns a promise that resolves to the data', function(done) {
+          it ('returns a promise that resolves to the data', function() {
             const data = [{id: 1, a: 'a'}, {id: 2, b: 'b'}];
             const adapter = storeAdapter({todos: data});
 
-            adapter.get('todos', {id: 2}).then(data => {
+            return adapter.get('todos', {id: 2}).then(data => {
               expect(data).to.eql({id: 2, b: 'b'});
             })
-            done()
           })
         })
 
         describe('no object exists with matching attributes', function() {
-          it ('returns a promise that resolves to null', function(done) {
+          it ('returns a promise that resolves to null', function() {
             const data    = [{id: 1, a: 'a'}, {id: 2, b: 'b'}];
             const adapter = storeAdapter({todos: data});
 
-            adapter.get('todos', {id: 3}).then(data => {
+            return adapter.get('todos', {id: 3}).then(data => {
               expect(data).to.be.null
             })
-            done()
           })
         })
 
         describe('query attribute does not exist in any store objects', function() {
-          it ('returns a promise that resolves to null', function(done) {
+          it ('returns a promise that resolves to null', function() {
             const data    = [{id: 1, a: 'a'}, {id: 2, b: 'b'}];
             const adapter = storeAdapter({todos: data});
 
-            adapter.get('todos', {id: 3}).then(data => {
+            return adapter.get('todos', {id: 3}).then(data => {
               expect(data).to.be.null;
             })
-            done()
           })
         })
 
         describe('store data is not an array', function() {
-          it ('returns the correct object', function(done) {
+          it ('returns the correct object', function() {
             const adapter = storeAdapter({todo: {id: 1, a: 'a'}});
 
-            adapter.get('todo', {a: 'a'}).then(data => {
+            return adapter.get('todo', {a: 'a'}).then(data => {
               expect(data).to.eql({id: 1, a: 'a'});
             })
-            done()
           })
         })
 
@@ -101,15 +96,14 @@ describe('plain JS storeAdapter', function() {
             }
           }
           describe('instance has a matching property', function() {
-            it ('returns the instance', function(done) {
+            it ('returns the instance', function() {
               const data    = [new Todo(1), new Todo(2)];
               const adapter = storeAdapter({todos: data});
 
-              adapter.get('todos', {id: 2}).then(data => {
+              return adapter.get('todos', {id: 2}).then(data => {
                 expect(data).to.be.an.instanceof(Todo);
                 expect(data.id).to.be.eql(2);
               })
-              done()
             })
           })
         })
@@ -127,68 +121,64 @@ describe('plain JS storeAdapter', function() {
     })
 
     describe('store data is an array', function() {
-      it ('appends new data to the array', function(done) {
-        const cache = {todos: [{id: 1, a: 'a'}]};
+      it ('appends new data to the array', function() {
+        const cache   = {todos: [{id: 1, a: 'a'}]};
         const adapter = storeAdapter(cache);
 
-        adapter.add('todos', {id: 2, b: 'b'}).then(data => {
+        return adapter.add('todos', {id: 2, b: 'b'}).then(data => {
           expect(data).to.eql({id: 2, b: 'b'})
         }).then(() => {
           expect(cache).to.eql({todos: [{id: 1, a: 'a'},{id: 2, b: 'b'}]})
         })
-        done()
       })
     })
 
     describe('store data is an object/non-iterable', function() {
-      it ('replaces the store data with new data', function(done) {
-        const adapter = storeAdapter({todo: {id: 1, a: 'a'}});
+      it ('replaces the store data with new data', function() {
+        const cache   = {todo: {id: 1, a: 'a'}};
+        const adapter = storeAdapter(cache);
 
-        adapter.add('todo', {id: 2, b: 'b'}).then(data => {
+        return adapter.add('todo', {id: 2, b: 'b'}).then(data => {
           expect(data).to.eql({id: 2, b: 'b'})
         }).then(() => {
           expect(cache).to.eql({todo: {id: 2, b: 'b'}})
         })
-        done()
       })
     })
   })
 
   describe ('replaceObject', function() {
-    it ('replaces an object in the store with a new version', function(done) {
+    it ('replaces an object in the store with a new version', function() {
       const cache     = {todos: [{id: 1, foo: 'foo'}, {id: 5, bar: 'bar'}]};
       const adapter   = storeAdapter(cache);
       const newObject = {id: 5, woot: 'woot'};
 
-      adapter.replaceObject('todos', newObject).then(data => {
+      return adapter.replaceObject('todos', newObject).then(data => {
         expect(data).to.equal(newObject);
       })
       expect(cache.todos).to.eql([{id: 1, foo: 'foo'},{id: 5, woot: 'woot'}]);
-      done()
     })
 
-    it ('adds an object to an empty store', function(done) {
+    it ('adds an object to an empty store', function() {
       const cache     = {todos: []};
       const adapter   = storeAdapter(cache);
       const newObject = {id: 5, woot: 'woot'};
 
-      adapter.replaceObject('todos', newObject).then(data => {
+      return adapter.replaceObject('todos', newObject).then(data => {
         expect(data).to.equal(newObject);
       })
       expect(cache.todos).to.eql([newObject]);
-      done()
     })
 
-    it ('adds an empty object to the store', function(done) {
+    it ('adds an empty object to the store', function() {
       const cache     = {todos: []};
       const adapter   = storeAdapter(cache);
       const emptyObject = {};
 
-      adapter.replaceObject('todos', emptyObject).then(data => {
+      return adapter.replaceObject('todos', emptyObject).then(data => {
         expect(data).to.equal(emptyObject);
       })
       expect(cache.todos).to.eql([emptyObject]);
-      done()
     })
   })
 
@@ -204,11 +194,11 @@ describe('plain JS storeAdapter', function() {
       {id: 4, title: 'biggest'}
     ]
 
-    it ('merges the newCollection\'s objects into the cache by id', function(done) {
+    it ('merges the newCollection\'s objects into the cache by id', function() {
       const cache   = {todos: cached};
       const adapter = storeAdapter(cache);
 
-      adapter.mergeCollection('todos', newCollection).then(data => {
+      return adapter.mergeCollection('todos', newCollection).then(data => {
         expect(data).to.eql([
           {id: 1, title: 'big'},
           {id: 2, title: 'bigger'},
@@ -216,7 +206,6 @@ describe('plain JS storeAdapter', function() {
           {id: 4, title: 'biggest'}
         ]);
       })
-      done()
     })
   })
 })

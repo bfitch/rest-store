@@ -25,11 +25,10 @@ describe('RestStore Integration Tests', function() {
       const storeAdapter = jsStoreAdapter({todos: [a,b]})
       const store        = restStore(mappings, storeAdapter)
 
-      it ('returns a promise that resolves with the in-memory data', function(done) {
-        store.find('todos', {id: 1}).then(data => {
+      it ('returns a promise that resolves with the in-memory data', function() {
+        return store.find('todos', {id: 1}).then(data => {
           expect(data).to.equal(a)
         })
-        done()
       })
 
       describe ('force is passed as an option', function() {
@@ -43,12 +42,11 @@ describe('RestStore Integration Tests', function() {
           const storeAdapter = jsStoreAdapter(cache)
           const store        = restStore(mappings, storeAdapter)
 
-          it ('makes an ajax request, returns the object, replaces it in the store', function(done) {
-            store.find('todos', {id: 3}, {force: true}).then(data => {
+          it ('makes an ajax request, returns the object, replaces it in the store', function() {
+            return store.find('todos', {id: 3}, {force: true}).then(data => {
               expect(data).to.not.equal(c);
               expect(data).to.eql(c);
               expect(cache).to.eql({todos: [{id: 1, a: 'a'}, {id: 3, c: 'c'}]});
-              done()
             })
           })
         })
@@ -64,8 +62,8 @@ describe('RestStore Integration Tests', function() {
         const storeAdapter = jsStoreAdapter(cache)
         const store        = restStore(mappings, storeAdapter)
 
-      it ('performs an ajax request and adds the data to the store', function(done) {
-        store.find('todos', {id: 5}).then(data => {
+      it ('performs an ajax request and adds the data to the store', function() {
+        return store.find('todos', {id: 5}).then(data => {
           expect(data).to.eql({id: 5, woot: 'woot' });
         })
         .then(() => {
@@ -74,7 +72,6 @@ describe('RestStore Integration Tests', function() {
             {id: 3, c: 'c'},
             {id: 5, woot: 'woot'}]
           });
-          done()
         })
       })
     })
@@ -89,13 +86,14 @@ describe('RestStore Integration Tests', function() {
 
     describe('data is in the store', function() {
       const [one,three,four] = [{id: 1, a: 'a'}, {id: 3, a: 'a'}, {id: 4, a: 'aa'}];
-      const storeAdapter = jsStoreAdapter({todos: [one,three,four]});
-      const store        = restStore(mappings, storeAdapter);
+      const cache            = {todos: [one,three,four]}
+      const storeAdapter     = jsStoreAdapter(cache);
+      const store            = restStore(mappings, storeAdapter);
 
-      it ('returns a promise that resolves with the in-memory data', function(done) {
-        store.findAll('todos', {a: 'a'}).then(data => {
+      it ('returns a promise that resolves with the in-memory data', function() {
+        return store.findAll('todos', {a: 'a'}).then(data => {
           expect(data).to.eql([one,three]);
-          done()
+          expect(cache).to.eql({todos: [one,three,four]});
         })
       })
 
@@ -115,13 +113,11 @@ describe('RestStore Integration Tests', function() {
           const store        = restStore(mappings, storeAdapter)
 
           // maybe want to do a request with query params and smart merge?
-          it ('makes an ajax request, returns the collection, replaces it in the store', function(done) {
-            store.findAll('todos', {foo: 'aa'}, {force: true}).then(data => {
+          it ('makes an ajax request, returns the collection, replaces it in the store', function() {
+            return store.findAll('todos', {foo: 'aa'}, {force: true}).then(data => {
               expect(data).to.eql(response);
               expect(cache).to.eql({todos: response});
-              done()
             })
-            .catch(error => { console.log(error) });
           })
         })
       })
@@ -146,8 +142,8 @@ describe('RestStore Integration Tests', function() {
       const storeAdapter = jsStoreAdapter(cache)
       const store        = restStore(mappings, storeAdapter)
 
-      it ('performs an ajax request and merges data into the store', function(done) {
-        store.findAll('todos', {foo: 'a'}).then(data => {
+      it ('performs an ajax request and merges data into the store', function() {
+        return store.findAll('todos', {foo: 'a'}).then(data => {
           expect(data).to.eql([
             {id: 1, foo: 'a'},
             {id: 2, foo: 'a'},
@@ -160,9 +156,7 @@ describe('RestStore Integration Tests', function() {
             {id: 4, foo: 'b'},
             {id: 5, foo: 'c'}
           ]});
-          done()
         })
-        .catch(error => { console.log(error) });
       })
     })
   })
