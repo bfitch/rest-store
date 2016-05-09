@@ -11,6 +11,8 @@
   "peerDependencies": {},
   "dependencies": {
     "axios": "^0.9.1",
+    "lodash.flattendeep": "^4.2.0",
+    "lodash.isobject": "^3.0.2",
     "path-to-regexp": "^1.2.1",
     "url-parse": "^1.1.1"
   },

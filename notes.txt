@@ -1,3 +1,79 @@
+insert(collection, attrs) // add or replace by id, returns added record
+
+updateById(collection, id, attrs) // merges and returns the record
+updateWhere(collection, query, attrs) // merges and returns updated collection
+
+replaceById(collection, id, attrs) //  replace by id, returns record
+
+removeById(collection, id)  // deleted and returns deleted record
+removeWhere(collection, query) // returns removed records in collecton
+
+          object              | collection
+
+add       insert              | insertAll
+update    updateById          | updateAll
+replace   replaceById         | replaceAll
+delete    removeById          | removeAll
+
+insert(collection || object, attrs || collection)
+  collection in store, collection to add
+    - concat
+
+  collection in store, object to add
+    - push
+
+  object in store, object to add
+    - replace (assignment)
+
+  throw: object in store, collection to add
+
+
+update(collection || object, id, attrs = null, {replace: true})
+  throw: attrs are a collection
+
+  collection in store, object to update
+    - find index by id
+    - splice + merge object attrs
+
+  collection in store, object to update, replace: true
+    - find index by id
+    - splice + new attrs
+
+  collection in store, null
+    - find index by id
+    - splice + no attrs
+
+  object in store, object to update
+    - merge object attrs
+
+  object in store, object to update, replace: true
+    - replace (assignment)
+
+  object in store, null
+    - null (assignment)
+
+
+updateAll(storeCollection, collectionToUpdate, {replace: true || remove: true})
+  throw: path is not a collection
+  throw: identifier not found in collectionToUpdate
+
+  update
+    - each record in collectionToUpdate
+      update(storeCollection, record.identifier, record)
+
+  replace
+    - each record in collectionToUpdate
+      update(storeCollection, record.identifier, {replace: true})
+
+  remove
+    - each record in collectionToUpdate
+      update(storeCollection, record.identifier, {remove: true})
+
+
+
+
+
+
 Chores
 
 1. Propogate promise errors! (re-raise in catch()? )
@@ -28,7 +104,7 @@ Features
 
 DONE! 2. Expose raw store `cache` from store adapter
 
-3. Expose raw ajax lib (`http`) from axios adapter
+DONE! 3. Expose raw ajax lib (`http`) from axios adapter
   - make sure you can set global config: headers, etc.
 
 4. Set global and per resource TTL (unix timestamp) cache busting

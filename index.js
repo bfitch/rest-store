@@ -10,83 +10,82 @@ export function restStore(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) 
     http: ajaxAdapter.http,
 
     find(path, clientQuery, httpOptions) {
-      const options = config('find', path, clientQuery, httpOptions, mappings);
+      const options = config(mappings, path, 'find', clientQuery, httpOptions);
       const {url, root, params, headers, force, model, query, identifier} = options;
 
       ajaxAdapter.setConfig({root, model});
       storeAdapter.setConfig({identifier});
 
       if (force) {
-        return ajaxAdapter.find(url, params, headers).then(fetchedData => {
-          return storeAdapter.replaceObject(path, fetchedData);
-        });
+        return ajaxAdapter.find(url, params, headers)
+          .then(fetchedData => storeAdapter.setById(path, fetchedData[identifier], fetchedData))
+          .then(data => Array.isArray(data) ? data.pop() : data);
       } else {
         return storeAdapter.get(path, query).then(data => {
           if (data) return data;
 
-          const fetchedData = ajaxAdapter.find(url, params, headers);
-          return fetchedData.then(data => storeAdapter.add(path, data));
+          return ajaxAdapter.find(url, params, headers)
+            .then(data => storeAdapter.setById(path, data[identifier], data))
+            .then(data => Array.isArray(data) ? data.pop() : data);
         });
       }
     },
 
     findAll(path, clientQuery, httpOptions) {
-      const options = config('findAll', path, clientQuery, httpOptions, mappings);
+      const options = config(mappings, path, 'findAll', clientQuery, httpOptions);
       const {url, root, params, headers, force, model, query, identifier} = options;
 
       ajaxAdapter.setConfig({root, model});
       storeAdapter.setConfig({identifier});
 
       if (force) {
-        return ajaxAdapter.find(url, params, headers).then(fetchedData => {
-          return storeAdapter.replace(path, fetchedData);
+        return ajaxAdapter.find(url, params, headers).then(data => {
+          return storeAdapter.setAllById(path, data);
         });
       } else {
         return storeAdapter.getCollection(path, query).then(data => {
           if (data) return data;
 
           return ajaxAdapter.find(url, params, headers)
-            .then(data => storeAdapter.mergeCollection(path, data))
-            .then(data => storeAdapter.queryStore('filter', data, query));
+            .then(data => storeAdapter.setAllById(path, data));
         });
       }
     },
 
     create(path, attributes, httpOptions) {
-      const options = config('create', path, {}, httpOptions, mappings);
+      const options = config(mappings, path, 'create', {}, httpOptions);
       const {url, root, params, headers, model, identifier} = options;
 
-      const ajax  = ajaxAdapter({root, model});
-      const store = storeAdapter({identifier});
+      ajaxAdapter.setConfig({root, model});
+      storeAdapter.setConfig({identifier});
 
-      return ajax.create(url, attributes, params, headers).then(fetchedData => {
-        return store.add(path, fetchedData);
+      return ajaxAdapter.create(url, attributes, params, headers).then(data => {
+        return storeAdapter.setById(path, data[identifier], data);
       });
     },
 
     update(path, clientQuery, attributes, httpOptions) {
-      const options = config('update', path, clientQuery, httpOptions, mappings);
+      const options = config(mappings, path, 'update', clientQuery, httpOptions);
       const {url, root, params, headers, model, identifier} = options;
 
-      const ajax  = ajaxAdapter({root, model});
-      const store = storeAdapter({identifier});
+      ajaxAdapter.setConfig({root, model});
+      storeAdapter.setConfig({identifier});
 
-      return ajax.update(url, attributes, params, headers).then(fetchedData => {
-        return store.replaceObject(path, fetchedData);
+      return ajaxAdapter.update(url, attributes, params, headers).then(data => {
+        return storeAdapter.setById(path, data[identifier], data);
       });
     },
 
     delete(path, clientQuery, httpOptions) {
-      const options = config('delete', path, clientQuery, httpOptions, mappings);
+      const options = config(mappings, path, 'delete', clientQuery, httpOptions);
       const {url, root, params, headers, model, identifier} = options;
 
-      const ajax  = ajaxAdapter({root, model});
-      const store = storeAdapter({identifier});
+      ajaxAdapter.setConfig({root, model});
+      storeAdapter.setConfig({identifier});
 
-      return ajax.delete(url, params, headers).then(fetchedData => {
-        return store.removeObject(path, clientQuery);
+      return ajax.delete(url, params, headers).then(data => {
+        return storeAdapter.setById(path, clientQuery[identifier], null);
       });
-
     }
   }
 }

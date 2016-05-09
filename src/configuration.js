@@ -1,6 +1,6 @@
 import parseUrl from './parse-url';
 
-export default function(method, path, query = {}, httpOptions = {}, mappings) {
+export default function(mappings, path, method, query = {}, httpOptions = {}) {
   if (!mappings)       throw new Error('You must provide url mappings');
   if (!path)           throw new Error('You must provide a path');
   if (!mappings[path]) throw new Error(`No key '${path}' found in mapping configuration`)

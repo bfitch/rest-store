@@ -15,13 +15,13 @@ describe('configuration', function() {
 
     it ('raises an error if no mappings are provided', function() {
       expect(() => {
-        config('find', 'todos', {}, {})
+        config(undefined, 'todos', 'find')
       }).to.throw(Error, 'You must provide url mappings')
     })
 
     it ('raises an error if no path is provided', function() {
       expect(() => {
-        config('find', undefined, {}, {}, this.mappings)
+        config(this.mappings, undefined, 'find')
       }).to.throw(Error, 'You must provide a path')
     })
 
@@ -40,7 +40,7 @@ describe('configuration', function() {
         headers: {auth: 'boo'},
         force: true
       }
-      const c = config('find', 'todos', {}, httpOptions, this.mappings)
+      const c = config(this.mappings, 'todos', 'find', {}, httpOptions)
 
       expect(c.headers).to.eql(httpOptions.headers)
       expect(c.params).to.eql(httpOptions.params)
@@ -49,7 +49,7 @@ describe('configuration', function() {
 
     describe('nothing passed in', function() {
       it ('sets default values', function() {
-        const c = config('find', 'todos', {id: 1}, undefined, this.mappings)
+        const c = config(this.mappings, 'todos', 'find', {id: 1})
 
         expect(c.headers).to.eql({})
         expect(c.params).to.eql({})
@@ -60,22 +60,17 @@ describe('configuration', function() {
 
   describe('url', function() {
     it ('builds from client side store query attributes', function() {
-      const url = config('find', 'todos', {id: 1}, {}, this.mappings).url
+      const url = config(this.mappings, 'todos', 'find', {id: 1}).url
       expect(url).to.eql(this.url + '/1')
     })
 
     it ('builds from http query params', function() {
-      const url = config('find', 'todos', {}, {params: {id: 1}}, this.mappings).url
+      const url = config(this.mappings, 'todos', 'find', {}, {params: {id: 1}}).url
       expect(url).to.eql(this.url + '/1')
     })
 
     it ('builds from other attributes passed in', function() {
-      const url = config('find', 'todos', {}, {id: 1}, this.mappings).url
-      expect(url).to.eql(this.url + '/1')
-    })
-
-    it ('builds from client side query attributes', function() {
-      const url = config('find', 'todos', {id: 1}, {}, this.mappings).url
+      const url = config(this.mappings, 'todos', 'find', {}, {id: 1}).url
       expect(url).to.eql(this.url + '/1')
     })
 
@@ -86,7 +81,7 @@ describe('configuration', function() {
           url: this.url
         }
       }
-      const url = config('find', 'todos', {user_id: 123}, {id: 1}, this.mappings).url
+      const url = config(this.mappings, 'todos', 'find', {user_id: 123}, {id: 1}).url
       expect(url).to.eql('http://todos.com/123/todos/1')
     })
 
@@ -99,7 +94,7 @@ describe('configuration', function() {
             identifier: 'uid'
           }
         }
-        const url = config('find', 'todos', {uid: 123}, {}, this.mappings).url
+        const url = config(this.mappings, 'todos', 'find', {uid: 123}).url
         expect(url).to.eql('http://todos.com/todos/123')
       })
 
@@ -111,7 +106,7 @@ describe('configuration', function() {
             identifier: 'uid'
           }
         }
-        const url = config('findAll', 'todos', {uid: 123}, {}, this.mappings).url
+        const url = config(this.mappings, 'todos', 'findAll', {uid: 123}).url
         expect(url).to.eql('http://todos.com/todos')
       })
     })
@@ -120,7 +115,7 @@ describe('configuration', function() {
   describe ('model', function() {
     describe('no option passed in', function(){
       it ('defaults to false', function() {
-        const model = config('find', 'todos', {}, {}, this.mappings).model
+        const model = config(this.mappings, 'todos', 'find').model
         expect(model).to.be.false
       })
     })
@@ -128,7 +123,7 @@ describe('configuration', function() {
       it ('throws an error', function() {
         const mappings = {todos: {...this.mappings.todos, model: true}}
         expect(() => {
-          config('find', 'todos', {}, {}, mappings).model
+          config(mappings, 'todos', 'find').model
         }).to.throw(Error, "You must provide a class name or constructor function." +
           " Received: 'true'");
       })
@@ -136,9 +131,9 @@ describe('configuration', function() {
     describe('class constant is passed in', function() {
       class Todo {}
 
-      it ('returns returns the function', function() {
+      it ('returns the function', function() {
         const mappings = {todos: {...this.mappings.todos, model: Todo}}
-        const model = config('find', 'todos', {}, {}, mappings).model
+        const model = config(mappings, 'todos', 'find').model
         expect(new model).to.be.an.instanceof(Todo);
       })
     })
@@ -147,21 +142,21 @@ describe('configuration', function() {
   describe ('root', function() {
     describe('no option passed in', function(){
       it ('defaults to true', function() {
-        const root = config('find', 'todos', {}, {}, this.mappings).root
+        const root = config(this.mappings, 'todos', 'find').root
         expect(root).to.be.true
       })
     })
     describe('false is passed in', function() {
       it ('returns false', function() {
         const mappings = {todos: {...this.mappings.todos, root: false}}
-        const root = config('find', 'todos', {}, {}, mappings).root
+        const root = config(mappings, 'todos', 'find').root
         expect(root).to.be.false
       })
     })
     describe('non-boolean value is passed in', function() {
       it ('throws an error', function() {
         const mappings = {todos: {...this.mappings.todos, root: 'string'}}
-        const root = () => config('find', 'todos', {}, {}, mappings).root
+        const root = () => config(mappings, 'todos', 'find').root
         expect(root).to.throw(Error, "'root' option must be a boolean value.");
       })
     })
