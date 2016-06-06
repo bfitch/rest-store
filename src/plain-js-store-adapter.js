@@ -44,13 +44,12 @@ export default function(store = {}, mappings = {}) {
       checkPath(store, path);
       if (isArray(attrs)) throw new Error('ArgumentError: update() cannot set an array. Use updateAll() instead.');
       const {identifier} = config(mappings, path);
-      const {replace}    = options;
       let updated;
 
       if (isArray(store[path])) {
-        updated = updateCollection(store, path, id, identifier, attrs, replace);
+        updated = updateCollection(store, path, id, identifier, attrs, options.replace);
       } else {
-        updated = updateObject(store, path, attrs, replace);
+        updated = updateObject(store, path, attrs, options.replace);
       }
       return promisify(updated);
     },
@@ -65,9 +64,13 @@ export default function(store = {}, mappings = {}) {
       const index = collection.findIndex(item => identifier in item);
       if (index === NOT_FOUND) throw new Error(`Collection has no property: '${identifier}'`);
 
-      const updated = collection.map(item => {
-        return this.update(path, item[identifier], item, options);
-      });
+      const storeIds      = store[path].map(item => item[identifier]);
+      const collectionIds = collection.map(item => item[identifier]);
+      const idsToRemove   = storeIds.filter(id => collectionIds.indexOf(id) < 0);
+
+      if (!isEmpty(idsToRemove)) idsToRemove.forEach(id => this.update(path, id));
+
+      const updated = collection.map(item => this.update(path, item[identifier], item, options));
       return Promise.all(updated);
     }
   }
@@ -90,7 +93,7 @@ function updateCollection(store, path, id, identifier, attrs, replace) {
   const index = store[path].findIndex(item => item[identifier] === id);
 
   if (index === NOT_FOUND && attrs === null) {
-    throw new Error(`No object found with '${identifier}': ${id}.`);
+    throw new Error(`No object found at path: '${path}' with '${identifier}': ${id}.`);
   }
 
   if (index === NOT_FOUND) {

@@ -37,6 +37,12 @@ describe('updateAll', function() {
     )
   })
 
+  // If a model in the list isn't yet in the collection it will be added;
+  // if the model is already in the collection its attributes will be merged;
+  // and if the collection contains any models that aren't present in the list, they'll be removed.
+  // options: if you'd like to customize the behavior,
+  // you can disable it with options: {add: false}, {remove: false}, or {replace: true}.
+
   it ('finds objects by id and merges new attrs into each object', function() {
     const cached = [
       {id: 1, title: 'foo'},
@@ -61,12 +67,11 @@ describe('updateAll', function() {
       expect(cache.todos).to.eql([
         {id: 1, title: 'foo', other: 'big baby'},
         {id: 2, title: 'bigger'},
-        {id: 3, title: 'foo'},
         {id: 4, title: 'biggest'}
       ]);
     })
   })
-  //
+
   it ('finds objects by id and replaces them', function() {
     const cached = [
       {id: 1, foo: 'foo'},
@@ -76,43 +81,19 @@ describe('updateAll', function() {
     const cache = {todos: cached};
     const adapter = storeAdapter(cache, mappings);
     const newCollection = [
-      {id: 1, foo: 'foo', blur: 'blur'},
+      {id: 1, boo: 'boo'},
       {id: 5, cool: 'cool'}
     ];
 
     return adapter.updateAll('todos', newCollection, {replace: true}).then(data => {
       expect(data).to.eql([
-        {id: 1, foo: 'foo', blur: 'blur'},
+        {id: 1, boo: 'boo'},
         {id: 5, cool: 'cool'}
       ]);
       expect(cache.todos).to.eql([
-        {id: 1, foo: 'foo', blur: 'blur'},
-        {id : 3, wur: 'wur'},
+        {id: 1, boo: 'boo'},
         {id: 5, cool: 'cool'}
       ]);
     })
   })
-
-  // it ('removes the objects by id and returns them', function() {
-  //   const cached = [
-  //     {id: 1, foo: 'foo'},
-  //     {id : 3, wur: 'wur'},
-  //     {id: 5, bar: 'bar'}
-  //   ]
-  //   const cache = {todos: cached};
-  //   const adapter = storeAdapter(cache, mappings);
-  //
-  //   return adapter.updateAll('todos', newCollection, {replace: true}).then(data => {
-  //     expect(data).to.eql([
-  //       {id: 1, foo: 'foo', blur: 'blur'},
-  //       {id : 3, wur: 'wur'},
-  //       {id: 5, cool: 'cool'}
-  //     ]);
-  //     expect(cache.todos).to.eql([
-  //       {id: 1, foo: 'foo', blur: 'blur'},
-  //       {id : 3, wur: 'wur'},
-  //       {id: 5, cool: 'cool'}
-  //     ]);
-  //   })
-  // })
 })

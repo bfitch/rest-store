@@ -12,6 +12,14 @@ describe('insert', function() {
   })
 
   describe('inserting a collection', function() {
+    it ('throws an error if the store path is not a collection', function() {
+      const adapter = storeAdapter({todos: {}});
+
+      expect(() => adapter.insert('todos', [])).to.throw(Error,
+        "Store path: todos must be an array if adding a collection."
+      )
+    })
+
     it ('adds each object in the collection to the store', function() {
       const cache   = {todos: [{id: 1, a: 'a'}]};
       const adapter = storeAdapter(cache);
@@ -24,14 +32,6 @@ describe('insert', function() {
           {id: 3, c: 'c'}
         ]});
       });
-    })
-
-    it ('throws an error if the store path is not a collection', function() {
-      const adapter = storeAdapter({todos: {}});
-
-      expect(() => adapter.insert('todos', [])).to.throw(Error,
-        "Store path: todos must be an array if adding a collection."
-      )
     })
   })
 
@@ -58,4 +58,27 @@ describe('insert', function() {
         expect(cache).to.eql({ todo: {id: 2, b: 'b'} });
       });
     })
+
+    it ('adds an object to an empty store', function() {
+      const cache     = {todos: []};
+      const adapter   = storeAdapter(cache);
+      const newObject = {id: 5, woot: 'woot'};
+
+      return adapter.insert('todos', newObject).then(data => {
+        expect(data).to.equal(newObject);
+      })
+      expect(cache.todos).to.eql([newObject]);
+    })
+
+    it ('adds an empty object to the store', function() {
+      const cache     = {todos: []};
+      const adapter   = storeAdapter(cache);
+      const emptyObject = {};
+
+      return adapter.insert('todos', emptyObject).then(data => {
+        expect(data).to.equal(emptyObject);
+      })
+      expect(cache.todos).to.eql([emptyObject]);
+    })
   })
+})

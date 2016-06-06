@@ -78,8 +78,6 @@ describe('findAll', function() {
           {id: 3, foo: 'a'},
         ]);
         expect(cache).to.eql({todos: [
-          {id: 4, foo: 'b'},
-          {id: 5, foo: 'c'},
           {id: 1, foo: 'a'},
           {id: 2, foo: 'a'},
           {id: 3, foo: 'a'}

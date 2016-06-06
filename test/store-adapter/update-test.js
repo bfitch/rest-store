@@ -67,7 +67,7 @@ describe('update', function() {
         const adapter = storeAdapter(cache, mappings);
 
         expect(() => adapter.update('todos', 2)).to.throw(Error,
-          "No object found with 'id': 2."
+          "No object found at path: 'todos' with 'id': 2."
         )
       })
     })
