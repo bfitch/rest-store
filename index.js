@@ -14,18 +14,17 @@ export function restStore(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) 
       const {url, root, params, headers, force, model, query, identifier} = options;
 
       ajaxAdapter.setConfig({root, model});
-      storeAdapter.setConfig({identifier});
 
       if (force) {
         return ajaxAdapter.find(url, params, headers)
-          .then(fetchedData => storeAdapter.setById(path, fetchedData[identifier], fetchedData))
+          .then(fetchedData => storeAdapter.update(path, fetchedData[identifier], fetchedData, {replace: true}))
           .then(data => Array.isArray(data) ? data.pop() : data);
       } else {
         return storeAdapter.get(path, query).then(data => {
           if (data) return data;
 
           return ajaxAdapter.find(url, params, headers)
-            .then(data => storeAdapter.setById(path, data[identifier], data))
+            .then(data => storeAdapter.insert(path, data))
             .then(data => Array.isArray(data) ? data.pop() : data);
         });
       }
@@ -36,18 +35,17 @@ export function restStore(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) 
       const {url, root, params, headers, force, model, query, identifier} = options;
 
       ajaxAdapter.setConfig({root, model});
-      storeAdapter.setConfig({identifier});
 
       if (force) {
         return ajaxAdapter.find(url, params, headers).then(data => {
-          return storeAdapter.setAllById(path, data);
+          return storeAdapter.updateAll(path, data, {replace: true});
         });
       } else {
         return storeAdapter.getCollection(path, query).then(data => {
           if (data) return data;
 
           return ajaxAdapter.find(url, params, headers)
-            .then(data => storeAdapter.setAllById(path, data));
+            .then(data => storeAdapter.updateAll(path, data, {replace: true}));
         });
       }
     },
@@ -57,7 +55,6 @@ export function restStore(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) 
       const {url, root, params, headers, model, identifier} = options;
 
       ajaxAdapter.setConfig({root, model});
-      storeAdapter.setConfig({identifier});
 
       return ajaxAdapter.create(url, attributes, params, headers).then(data => {
         return storeAdapter.setById(path, data[identifier], data);
@@ -69,7 +66,6 @@ export function restStore(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) 
       const {url, root, params, headers, model, identifier} = options;
 
       ajaxAdapter.setConfig({root, model});
-      storeAdapter.setConfig({identifier});
 
       return ajaxAdapter.update(url, attributes, params, headers).then(data => {
         return storeAdapter.setById(path, data[identifier], data);
@@ -81,7 +77,6 @@ export function restStore(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) 
       const {url, root, params, headers, model, identifier} = options;
 
       ajaxAdapter.setConfig({root, model});
-      storeAdapter.setConfig({identifier});
 
       return ajax.delete(url, params, headers).then(data => {
         return storeAdapter.setById(path, clientQuery[identifier], null);

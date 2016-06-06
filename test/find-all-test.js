@@ -15,7 +15,7 @@ describe('findAll', function() {
   describe('data is in the store', function() {
     const [one,three,four] = [{id: 1, a: 'a'}, {id: 3, a: 'a'}, {id: 4, a: 'aa'}];
     const cache            = {todos: [one,three,four]}
-    const storeAdapter     = jsStoreAdapter(cache);
+    const storeAdapter     = jsStoreAdapter(cache, mappings);
     const store            = restStore(mappings, storeAdapter);
 
     it ('returns a promise that resolves with the in-memory data', function() {
@@ -37,8 +37,8 @@ describe('findAll', function() {
           .reply(200, {todos: response});
 
         const cache        = {todos: [{id: 1, foo: 'aa'}, {id: 2, foo: 'aa'}]};
-        const storeAdapter = jsStoreAdapter(cache);
-        const store        = restStore(mappings, storeAdapter)
+        const storeAdapter = jsStoreAdapter(cache, mappings);
+        const store        = restStore(mappings, storeAdapter);
 
         // maybe want to do a request with query params and smart merge?
         it ('makes an ajax request, returns the collection, replaces it in the store', function() {
@@ -67,8 +67,8 @@ describe('findAll', function() {
       .reply(200, {todos: response});
 
     const cache        = {todos: [{id: 4, foo: 'b'}, {id: 5, foo: 'c'}]};
-    const storeAdapter = jsStoreAdapter(cache)
-    const store        = restStore(mappings, storeAdapter)
+    const storeAdapter = jsStoreAdapter(cache, mappings);
+    const store        = restStore(mappings, storeAdapter);
 
     it ('performs an ajax request and merges data into the store', function() {
       return store.findAll('todos', {foo: 'a'}).then(data => {

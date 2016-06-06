@@ -3,6 +3,7 @@ import {promisify,isEmpty} from './utils';
 import flatten from 'lodash.flattendeep';
 import isObject from 'lodash.isobject';
 const {isArray} = Array;
+const NOT_FOUND = -1;
 
 export default function(store = {}, mappings = {}) {
   return {
@@ -47,14 +48,27 @@ export default function(store = {}, mappings = {}) {
       let updated;
 
       if (isArray(store[path])) {
-        updated = updateCollection(
-          store, path, id,
-          identifier, attrs, replace
-        );
+        updated = updateCollection(store, path, id, identifier, attrs, replace);
       } else {
         updated = updateObject(store, path, attrs, replace);
       }
       return promisify(updated);
+    },
+
+    updateAll(path, collection, options = {}) {
+      checkPath(store, path);
+      if (!isArray(store[path])) throw new Error(`Store path: ${path} must be an array when adding a collection.`);
+      if (isEmpty(collection)) throw new Error(`updateAll() should not be used to update the store path: ${path} with an empty collection.`);
+
+      const {identifier} = config(mappings, path);
+
+      const index = collection.findIndex(item => identifier in item);
+      if (index === NOT_FOUND) throw new Error(`Collection has no property: '${identifier}'`);
+
+      const updated = collection.map(item => {
+        return this.update(path, item[identifier], item, options);
+      });
+      return Promise.all(updated);
     }
   }
 }
@@ -74,9 +88,15 @@ function updateObject(store, path, attrs, replace) {
 
 function updateCollection(store, path, id, identifier, attrs, replace) {
   const index = store[path].findIndex(item => item[identifier] === id);
-  if (index === -1) throw new Error(`No object found with '${identifier}': ${id}.`);
 
-  if (attrs === null) {
+  if (index === NOT_FOUND && attrs === null) {
+    throw new Error(`No object found with '${identifier}': ${id}.`);
+  }
+
+  if (index === NOT_FOUND) {
+    store[path].push(attrs);
+    return attrs;
+  } else if (attrs === null) {
     const deleted = store[path][index];
     store[path].splice(index, 1);
     return deleted;

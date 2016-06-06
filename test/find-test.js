@@ -16,8 +16,8 @@ describe('find', function() {
 
   describe('data is in the store', function() {
     const [a,b] = [{id: 1, a: 'a'}, {id: 3, c: 'c'}]
-    const storeAdapter = jsStoreAdapter({todos: [a,b]})
-    const store        = restStore(mappings, storeAdapter)
+    const storeAdapter = jsStoreAdapter({todos: [a,b]}, mappings);
+    const store        = restStore(mappings, storeAdapter);
 
     it ('returns a promise that resolves with the in-memory data', function() {
       return store.find('todos', {id: 1}).then(data => {
@@ -33,8 +33,8 @@ describe('find', function() {
 
         const cache        = {todos: [{id: 1, a: 'a'}, {id: 3, c: 'c'}]};
         const [a,c]        = cache.todos;
-        const storeAdapter = jsStoreAdapter(cache)
-        const store        = restStore(mappings, storeAdapter)
+        const storeAdapter = jsStoreAdapter(cache, mappings);
+        const store        = restStore(mappings, storeAdapter);
 
         it ('makes an ajax request, returns the object, replaces it in the store', function() {
           return store.find('todos', {id: 3}, {force: true}).then(data => {
@@ -53,8 +53,8 @@ describe('find', function() {
         .reply(200, {todo: {id: 5, woot: 'woot' }});
 
       const cache        = {todos: [{id: 1, a: 'a'}, {id: 3, c: 'c'}]};
-      const storeAdapter = jsStoreAdapter(cache)
-      const store        = restStore(mappings, storeAdapter)
+      const storeAdapter = jsStoreAdapter(cache);
+      const store        = restStore(mappings, storeAdapter);
 
     it ('performs an ajax request and adds the data to the store', function() {
       return store.find('todos', {id: 5}).then(data => {

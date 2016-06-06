@@ -61,13 +61,15 @@ describe('update', function() {
       })
     })
 
-    it ('throws an error if no object is found', function() {
-      const cache   = {todos: []};
-      const adapter = storeAdapter(cache, mappings);
+    describe('deleting objects', function() {
+      it ('throws an error if no object is found', function() {
+        const cache   = {todos: []};
+        const adapter = storeAdapter(cache, mappings);
 
-      expect(() => adapter.update('todos', 2, {foo: 'foo'})).to.throw(Error,
-        "No object found with 'id': 2."
-      )
+        expect(() => adapter.update('todos', 2)).to.throw(Error,
+          "No object found with 'id': 2."
+        )
+      })
     })
   })
 
@@ -106,3 +108,4 @@ describe('update', function() {
       })
     })
   })
+})
