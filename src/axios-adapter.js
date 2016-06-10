@@ -2,17 +2,27 @@ import ajax from 'axios';
 import {isEmpty} from './utils';
 
 export default function(axios = ajax) {
-  const mapping = {find: 'get', create: 'post', update: 'put', delete: 'delete'};
-
-  const instance = Object.keys(mapping).reduce((instance, apiMethod) => {
-    const httpAction = mapping[apiMethod];
+  const mapping = {find: 'get', delete: 'delete'};
+  const gettersInstance = Object.keys(mapping).reduce((instance, apiMethod) => {
+    const method = mapping[apiMethod];
 
     instance[apiMethod] = function(url, params, headers) {
-      const axiosOptions = {method: httpAction, url, params, headers};
+      const axiosOptions = {method, url, params, headers};
       return request(axiosOptions, this.options);
     }
     return instance;
   },{});
+
+  const updatersMapping = {create: 'post', update: 'put'};
+  const instance = Object.keys(updatersMapping).reduce((instance, apiMethod) => {
+    const method = updatersMapping[apiMethod];
+
+    instance[apiMethod] = function(url, data, params, headers) {
+      const axiosOptions = {method, url, data, params, headers};
+      return request(axiosOptions, this.options);
+    }
+    return instance;
+  },gettersInstance);
 
   return Object.assign(instance, {
     http: axios,

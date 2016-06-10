@@ -26,6 +26,27 @@ describe('find', function() {
     })
 
     describe ('force is passed as an option', function() {
+      describe('request fails', function() {
+        mockServer
+          .get('/todos/3')
+          .reply(422, {'message': 'something awful happened'});
+
+          const cache        = {todos: []};
+          const storeAdapter = jsStoreAdapter(cache, mappings);
+          const store        = restStore(mappings, storeAdapter);
+
+        it ('bubbles the http error to be handled by a catch callback', function() {
+          return store.find('todos', {id: 3}, {force: true}).catch(response => {
+            expect(response.status).to.equal(422);
+            expect(response.statusText).to.be.null;
+            expect(response.headers).to.eql({'content-type': 'application/json'});
+            expect(response.data).to.eql({'message': 'something awful happened'});
+
+            expect(cache.todos).to.be.empty;
+          });
+        })
+      })
+
       describe ('object with same identifier value is in the store', function() {
         mockServer
           .get('/todos/3')
@@ -48,6 +69,28 @@ describe('find', function() {
   })
 
   describe('data is not in the store', function() {
+    describe('request fails', function() {
+      mockServer
+        .get('/todos/3')
+        .reply(500, {'message': 'something awful happened'});
+
+        const cache        = {todos: []};
+        const storeAdapter = jsStoreAdapter(cache, mappings);
+        const store        = restStore(mappings, storeAdapter);
+
+      it ('bubbles the http error to be handled by a catch callback', function() {
+        return store.find('todos', {id: 3}).catch(response => {
+          expect(response.status).to.equal(500);
+          expect(response.statusText).to.be.null;
+          expect(response.headers).to.eql({'content-type': 'application/json'});
+          expect(response.data).to.eql({'message': 'something awful happened'});
+
+          expect(cache.todos).to.be.empty;
+        });
+      })
+    })
+
+    describe('successfull request', function() {
       mockServer
         .get('/todos/5')
         .reply(200, {todo: {id: 5, woot: 'woot' }});
@@ -56,16 +99,17 @@ describe('find', function() {
       const storeAdapter = jsStoreAdapter(cache);
       const store        = restStore(mappings, storeAdapter);
 
-    it ('performs an ajax request and adds the data to the store', function() {
-      return store.find('todos', {id: 5}).then(data => {
-        expect(data).to.eql({id: 5, woot: 'woot' });
-      })
-      .then(() => {
-        expect(cache).to.eql({todos: [
-          {id: 1, a: 'a'},
-          {id: 3, c: 'c'},
-          {id: 5, woot: 'woot'}]
-        });
+      it ('performs an ajax request and adds the data to the store', function() {
+        return store.find('todos', {id: 5}).then(data => {
+          expect(data).to.eql({id: 5, woot: 'woot' });
+        })
+        .then(() => {
+          expect(cache).to.eql({todos: [
+            {id: 1, a: 'a'},
+            {id: 3, c: 'c'},
+            {id: 5, woot: 'woot'}]
+          });
+        })
       })
     })
   })

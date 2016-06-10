@@ -1,8 +1,6 @@
 import config from './configuration';
-import {promisify,isEmpty} from './utils';
-import flatten from 'lodash.flattendeep';
-import isObject from 'lodash.isobject';
-const {isArray} = Array;
+import { promisify, isEmpty } from './utils';
+const { isArray } = Array;
 const NOT_FOUND = -1;
 
 export default function(store = {}, mappings = {}) {
@@ -48,6 +46,20 @@ export default function(store = {}, mappings = {}) {
 
       if (isArray(store[path])) {
         updated = updateCollection(store, path, id, identifier, attrs, options.replace);
+      } else {
+        updated = updateObject(store, path, attrs, options.replace);
+      }
+      return promisify(updated);
+    },
+
+    updateWhere(path, query, attrs, options = {replace: true}) {
+      checkPath(store, path);
+      const {identifier} = config(mappings, path);
+      const item = queryStore('find', store[path], query);
+      let updated;
+
+      if (isArray(store[path])) {
+        updated = updateCollection(store, path, item[identifier], identifier, attrs, options.replace);
       } else {
         updated = updateObject(store, path, attrs, options.replace);
       }

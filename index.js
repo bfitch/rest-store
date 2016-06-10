@@ -1,3 +1,4 @@
+import uuid from 'node-uuid';
 import axiosAdapter from './src/axios-adapter';
 import jsStoreAdapter from './src/plain-js-store-adapter';
 import config from './src/configuration';
@@ -18,7 +19,7 @@ export function restStore(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) 
       if (force) {
         return ajaxAdapter.find(url, params, headers)
           .then(fetchedData => storeAdapter.update(path, fetchedData[identifier], fetchedData, {replace: true}))
-          .then(data => Array.isArray(data) ? data.pop() : data);
+          .then(data => Array.isArray(data) ? data.pop() : data)
       } else {
         return storeAdapter.get(path, query).then(data => {
           if (data) return data;
@@ -50,15 +51,30 @@ export function restStore(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) 
       }
     },
 
-    create(path, attributes, httpOptions) {
-      const options = config(mappings, path, 'create', {}, httpOptions);
-      const {url, root, params, headers, model, identifier} = options;
-
+    create(path, attributes, options = {}) {
+      const opts = config(mappings, path, 'create', {}, options);
+      const {url, root, params, headers, model, identifier} = opts;
       ajaxAdapter.setConfig({root, model});
 
-      return ajaxAdapter.create(url, attributes, params, headers).then(data => {
-        return storeAdapter.setById(path, data[identifier], data);
-      });
+      if (options.wait) {
+        return ajaxAdapter.create(url, attributes, params, headers)
+          .then(data => storeAdapter.insert(path, data));
+      } else {
+        const _cid = uuid.v4();
+        const optimisticUpdate = Object.assign({}, attributes, {_cid});
+
+        return storeAdapter.insert(path, optimisticUpdate)
+          .then(update => {
+            return ajaxAdapter.create(url, attributes, params, headers)
+              .then(data => {
+                return storeAdapter.updateWhere(path, {_cid}, data, {replace: true});
+              })
+              .catch(response => {
+                storeAdapter.updateWhere(path, {_cid}, null);
+                throw response;
+              });
+          });
+      }
     },
 
     update(path, clientQuery, attributes, httpOptions) {
