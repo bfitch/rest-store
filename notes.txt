@@ -99,7 +99,7 @@ DONE! 2. Tests for public store adapter methods
 
 Features
 
-1. Merge find/findAll clientQuery into http params hash
+NOPE! 1. Merge find/findAll clientQuery into http params hash
   - should be done in configuration.js
 
 DONE! 2. Expose raw store `cache` from store adapter
@@ -108,6 +108,8 @@ DONE! 3. Expose raw ajax lib (`http`) from axios adapter
   - make sure you can set global config: headers, etc.
 
 4. Set global and per resource TTL (unix timestamp) cache busting
+
+5. afterFetch() and beforeRequest() callbacks
 
 
 -----------------------------

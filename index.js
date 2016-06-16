@@ -63,29 +63,48 @@ export function restStore(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) 
         const _cid = uuid.v4();
         const optimisticUpdate = Object.assign({}, attributes, {_cid});
 
-        return storeAdapter.insert(path, optimisticUpdate)
-          .then(update => {
-            return ajaxAdapter.create(url, attributes, params, headers)
-              .then(data => {
-                return storeAdapter.updateWhere(path, {_cid}, data, {replace: true});
-              })
-              .catch(response => {
-                storeAdapter.updateWhere(path, {_cid}, null);
-                throw response;
-              });
+        return storeAdapter.insert(path, optimisticUpdate).then(update => {
+          return ajaxAdapter.create(url, attributes, params, headers)
+            .then(data => {
+              return storeAdapter.updateWhere(path, {_cid}, data, {replace: true});
+            })
+            .catch(response => {
+              storeAdapter.updateWhere(path, {_cid}, null);
+              throw response;
+            });
           });
       }
     },
 
-    update(path, clientQuery, attributes, httpOptions) {
-      const options = config(mappings, path, 'update', clientQuery, httpOptions);
-      const {url, root, params, headers, model, identifier} = options;
+    update(path, clientQuery, attributes, options = {}) {
+      const opts = config(mappings, path, 'update', clientQuery, options);
+      const {url, root, params, headers, model, identifier} = opts;
 
       ajaxAdapter.setConfig({root, model});
 
-      return ajaxAdapter.update(url, attributes, params, headers).then(data => {
-        return storeAdapter.setById(path, data[identifier], data);
-      });
+      if (options.wait) {
+        return ajaxAdapter.update(url, attributes, params, headers).then(data => {
+          return storeAdapter.update(path, data[identifier], data, {replace: true});
+        });
+      } else {
+        const _cid = uuid.v4();
+        const optimisticUpdate = Object.assign({}, attributes, {_cid});
+        let original = null;
+
+        storeAdapter.get(path, clientQuery).then(data => original = data);
+
+        return storeAdapter.update(path, attributes[identifier], optimisticUpdate, {replace: true})
+          .then(update => {
+            return ajaxAdapter.update(url, attributes, params, headers)
+              .then(data => {
+                return storeAdapter.updateWhere(path, {_cid}, data, {replace: true});
+              })
+              .catch(response => {
+                storeAdapter.updateWhere(path, {_cid}, original, {replace: true});
+                throw response;
+              });
+          });
+      }
     },
 
     delete(path, clientQuery, httpOptions) {
