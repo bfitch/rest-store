@@ -2,9 +2,10 @@ import uuid from 'node-uuid';
 import axiosAdapter from './src/axios-adapter';
 import jsStoreAdapter from './src/plain-js-store-adapter';
 import config from './src/configuration';
+import {isEmpty} from './src/utils';
 
 export function restStore(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) {
-  if (!storeAdapter) throw new Error('No storeAdapter. You must provide an in-memory store')
+  if (!storeAdapter) throw new Error('No storeAdapter. You must provide an in-memory store');
 
   return {
     cache: storeAdapter.cache,
@@ -87,14 +88,14 @@ export function restStore(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) 
           return storeAdapter.update(path, data[identifier], data, {replace: true});
         });
       } else {
-        const _cid = uuid.v4();
+        const _cid             = uuid.v4();
         const optimisticUpdate = Object.assign({}, attributes, {_cid});
-        let original = null;
+        let original           = null;
 
         storeAdapter.get(path, clientQuery).then(data => original = data);
 
         return storeAdapter.update(path, attributes[identifier], optimisticUpdate, {replace: true})
-          .then(update => {
+          .then(() => {
             return ajaxAdapter.update(url, attributes, params, headers)
               .then(data => {
                 return storeAdapter.updateWhere(path, {_cid}, data, {replace: true});
@@ -107,14 +108,33 @@ export function restStore(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) 
       }
     },
 
-    delete(path, clientQuery, httpOptions) {
-      const options = config(mappings, path, 'delete', clientQuery, httpOptions);
-      const {url, root, params, headers, model, identifier} = options;
+    delete(path, clientQuery, options = {}) {
+      const opts = config(mappings, path, 'delete', clientQuery, options);
+      const {url, root, params, headers, model, identifier} = opts;
 
       ajaxAdapter.setConfig({root, model});
 
-      return ajax.delete(url, params, headers).then(data => {
-        return storeAdapter.setById(path, clientQuery[identifier], null);
+      return storeAdapter.get(path, clientQuery).then(data => {
+        if (isEmpty(data)) {
+          const msg = `No data to delete at path: ${path} with query: ${JSON.stringify(clientQuery)}`
+          throw new Error(msg);
+        } else {
+          return data;
+        }
+      })
+      .then(data => {
+        if (options.wait) {
+          return ajaxAdapter.delete(url, data, params, headers).then(deleted => {
+            return storeAdapter.update(path, deleted[identifier]);
+          });
+        } else {
+          return storeAdapter.update(path, data[identifier]).then(() => {
+            return ajaxAdapter.delete(url, data, params, headers).catch(response => {
+              storeAdapter.insert(path, Object.assign({}, data));
+              throw response;
+            });
+          })
+        }
       });
     }
   }

@@ -37,11 +37,11 @@ describe('updateAll', function() {
     )
   })
 
-  // If a model in the list isn't yet in the collection it will be added;
-  // if the model is already in the collection its attributes will be merged;
-  // and if the collection contains any models that aren't present in the list, they'll be removed.
-  // options: if you'd like to customize the behavior,
-  // you can disable it with options: {add: false}, {remove: false}, or {replace: true}.
+  // - If an object in the collection isn't yet in the store it will be added.
+  // - If an object is already in the store, its attributes will be merged.
+  // - If the store contains any objects that aren't present in the collection, they'll be removed.
+  // You can disable this behavior with options: {replace: true}.
+  // TODO: add options for: {add: false}, {remove: false}
 
   it ('finds objects by id and merges new attrs into each object', function() {
     const cached = [

@@ -2,7 +2,7 @@ import ajax from 'axios';
 import {isEmpty} from './utils';
 
 export default function(axios = ajax) {
-  const mapping = {find: 'get', delete: 'delete'};
+  const mapping = {find: 'get'};
   const gettersInstance = Object.keys(mapping).reduce((instance, apiMethod) => {
     const method = mapping[apiMethod];
 
@@ -13,7 +13,7 @@ export default function(axios = ajax) {
     return instance;
   },{});
 
-  const updatersMapping = {create: 'post', update: 'put'};
+  const updatersMapping = {create: 'post', update: 'put', delete: 'delete'};
   const instance = Object.keys(updatersMapping).reduce((instance, apiMethod) => {
     const method = updatersMapping[apiMethod];
 
