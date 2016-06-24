@@ -1,9 +1,3 @@
-export function promisify(data) {
-  return new Promise((resolve, reject) => {
-    resolve(data);
-  });
-}
-
 export function isEmpty(object) {
   if (!object) {
     return true;

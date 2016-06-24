@@ -3,7 +3,7 @@ import {expect} from 'chai'
 import storeAdapter from '../../src/plain-js-store-adapter'
 
 describe('updateAll', function() {
-  const mappings = {todos: []};
+  const mappings = {todos: {}};
 
   it ('throws an error if the path is undefined', function() {
     const adapter = storeAdapter({}, mappings);

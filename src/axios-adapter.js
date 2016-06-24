@@ -8,7 +8,7 @@ export default function(axios = ajax) {
 
     instance[apiMethod] = function(url, params, headers) {
       const axiosOptions = {method, url, params, headers};
-      return request(axiosOptions, this.options);
+      return request(axiosOptions);
     }
     return instance;
   },{});
@@ -19,45 +19,24 @@ export default function(axios = ajax) {
 
     instance[apiMethod] = function(url, data, params, headers) {
       const axiosOptions = {method, url, data, params, headers};
-      return request(axiosOptions, this.options);
+      return request(axiosOptions);
     }
     return instance;
-  },gettersInstance);
+  }, gettersInstance);
 
-  return Object.assign(instance, {
-    http: axios,
-    options: {},
-    setConfig(options) {
-      this.options = options;
-    }
-  });
+  return Object.assign(instance, {http: axios});
 
-  function request(axiosOptions, {root, model}) {
+  function request(axiosOptions) {
     return axios(axiosOptions).then(response => {
-        return normalizeResponse(response.data, {root});
-      })
-      .then(data => {
-        return !model ? data : buildModels(data, model);
-      })
+      return response.data;
+    });
   }
 
-  function normalizeResponse(response, {root}) {
-    if (root) {
-      const msg = 'Expecting a root key in ajax response. But the response was empty.'
-      if (isEmpty(response)) throw new Error(msg);
-
-      const rootKey = Object.keys(response).pop();
-      return response[rootKey];
-    } else {
-      return response;
-    }
-  }
-
-  function buildModels(data, model) {
-    if (Array.isArray(data)) {
-      return data.map(attrs => new model(attrs));
-    } else {
-      return new model(data);
-    }
-  }
+  // function buildModels(data, model) {
+  //   if (Array.isArray(data)) {
+  //     return data.map(attrs => new model(attrs));
+  //   } else {
+  //     return new model(data);
+  //   }
+  // }
 }

@@ -56,6 +56,17 @@ describe('get', function() {
         })
       })
 
+      describe('querying by multiple attributes', function() {
+        it ('returns the object with matching attributes', function() {
+          const data = [{id: 1, a: 'a', b: 'b'}, {id: 2, a: 'a', c: 'c'}];
+          const adapter = storeAdapter({todos: data});
+
+          return adapter.get('todos', {a: 'a', b: 'b'}).then(data => {
+            expect(data).to.eql({id: 1, a: 'a', b: 'b'});
+          })
+        })
+      })
+
       describe('no object exists with matching attributes', function() {
         it ('returns a promise that resolves to null', function() {
           const data    = [{id: 1, a: 'a'}, {id: 2, b: 'b'}];
@@ -72,7 +83,7 @@ describe('get', function() {
           const data    = [{id: 1, a: 'a'}, {id: 2, b: 'b'}];
           const adapter = storeAdapter({todos: data});
 
-          return adapter.get('todos', {id: 3}).then(data => {
+          return adapter.get('todos', {foo: 3}).then(data => {
             expect(data).to.be.null;
           })
         })

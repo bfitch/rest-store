@@ -73,7 +73,7 @@ describe('delete', function() {
       const storeSpy = sinon.collection.spy(storeAdapter, 'update').withArgs('todos', 1);
       const ajaxStub  = sinon.collection.stub(ajaxAdapter, 'delete')
         .withArgs('http://todos.com/todos/1', { id: 1, a: 'a' }, {}, {})
-        .returns({ then() {}, catch() {} });
+        .returns({ then() { return { catch: function() {} }; } });
 
       return store.delete('todos', {id: 1}).then(() => {
         expect(storeSpy.calledOnce).to.be.true

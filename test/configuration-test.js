@@ -58,31 +58,143 @@ describe('configuration', function() {
     })
   })
 
-  describe('url', function() {
-    it ('builds from client side store query attributes', function() {
-      const url = config(this.mappings, 'todos', 'find', {id: 1}).url
-      expect(url).to.eql(this.url + '/1')
-    })
-
-    it ('builds from http query params', function() {
-      const url = config(this.mappings, 'todos', 'find', {}, {params: {id: 1}}).url
-      expect(url).to.eql(this.url + '/1')
-    })
-
-    it ('builds from other attributes passed in', function() {
-      const url = config(this.mappings, 'todos', 'find', {}, {id: 1}).url
-      expect(url).to.eql(this.url + '/1')
-    })
-
-    it ('can handle dynamic route segments', function() {
-      this.url = 'http://todos.com/:user_id/todos'
-      this.mappings = {
-        todos: {
-          url: this.url
-        }
+  describe('transformResponse hook', function() {
+    const mappings = {
+      todos: {
+        transformResponse: function() { return 'woot'; }
       }
-      const url = config(this.mappings, 'todos', 'find', {user_id: 123}, {id: 1}).url
-      expect(url).to.eql('http://todos.com/123/todos/1')
+    }
+
+    it ('sets a custom function to transform http responses', function() {
+      const c = config(mappings, 'todos', 'find');
+      expect(c.transformResponse()).to.eql('woot')
+    })
+  })
+
+  describe('url', function() {
+    describe('find', function() {
+      it ('builds from client side store query attributes', function() {
+        const url = config(this.mappings, 'todos', 'find', {id: 1}).url
+        expect(url).to.eql(this.url + '/1')
+      })
+
+      it ('builds from http query params', function() {
+        const url = config(this.mappings, 'todos', 'find', {}, {params: {id: 1}}).url
+        expect(url).to.eql(this.url + '/1')
+      })
+
+      it ('builds from other attributes passed in', function() {
+        const url = config(this.mappings, 'todos', 'find', {}, {id: 1}).url
+        expect(url).to.eql(this.url + '/1')
+      })
+    })
+
+    describe('findAll', function() {
+      it ('builds from client side store query attributes', function() {
+        const url = config(this.mappings, 'todos', 'findAll', {id: 1}).url
+        expect(url).to.eql(this.url)
+      })
+
+      it ('builds from http query params', function() {
+        const url = config(this.mappings, 'todos', 'findAll', {}, {params: {id: 1}}).url
+        expect(url).to.eql(this.url)
+      })
+
+      it ('builds from other attributes passed in', function() {
+        const url = config(this.mappings, 'todos', 'findAll', {}, {id: 1}).url
+        expect(url).to.eql(this.url)
+      })
+    })
+
+    describe('create', function() {
+      it ('builds from client side store query attributes', function() {
+        const url = config(this.mappings, 'todos', 'create', {id: 1}).url
+        expect(url).to.eql(this.url)
+      })
+
+      it ('builds from http query params', function() {
+        const url = config(this.mappings, 'todos', 'create', {}, {params: {id: 1}}).url
+        expect(url).to.eql(this.url)
+      })
+
+      it ('builds from other attributes passed in', function() {
+        const url = config(this.mappings, 'todos', 'create', {}, {id: 1}).url
+        expect(url).to.eql(this.url)
+      })
+    })
+
+    describe('update', function() {
+      it ('builds from client side store query attributes', function() {
+        const url = config(this.mappings, 'todos', 'update', {id: 1}).url
+        expect(url).to.eql(this.url + '/1')
+      })
+
+      it ('builds from http query params', function() {
+        const url = config(this.mappings, 'todos', 'update', {}, {params: {id: 1}}).url
+        expect(url).to.eql(this.url + '/1')
+      })
+
+      it ('builds from other attributes passed in', function() {
+        const url = config(this.mappings, 'todos', 'update', {}, {id: 1}).url
+        expect(url).to.eql(this.url + '/1')
+      })
+    })
+
+    describe('delete', function() {
+      it ('builds from client side store query attributes', function() {
+        const url = config(this.mappings, 'todos', 'delete', {id: 1}).url
+        expect(url).to.eql(this.url + '/1')
+      })
+
+      it ('builds from http query params', function() {
+        const url = config(this.mappings, 'todos', 'delete', {}, {params: {id: 1}}).url
+        expect(url).to.eql(this.url + '/1')
+      })
+
+      it ('builds from other attributes passed in', function() {
+        const url = config(this.mappings, 'todos', 'delete', {}, {id: 1}).url
+        expect(url).to.eql(this.url + '/1')
+      })
+    })
+
+    describe('dynamic route segments', function() {
+      it ('builds the url from a client side query', function() {
+        this.url = 'http://todos.com/:user_id/todos'
+        this.mappings = {
+          todos: {
+            url: this.url
+          }
+        }
+        const url = config(this.mappings, 'todos', 'find', {user_id: 123}, {id: 1}).url
+        expect(url).to.eql('http://todos.com/123/todos/1')
+      })
+
+      it ('builds the url from attributes', function() {
+        this.url = 'http://todos.com/:user_id/todos/:todo_id/comments'
+        this.mappings = {
+          todos: {
+            url: this.url,
+            identifier: 'uid'
+          }
+        }
+        const url = config(
+          this.mappings, 'todos', 'update', {title: 'cool'}, {uid: 'abc', todo_id: 5, user_id: 3}
+        ).url
+        expect(url).to.eql('http://todos.com/3/todos/5/comments/abc')
+      })
+
+      it ('builds the url from params', function() {
+        this.url = 'http://cool.com/conversations/:conversation_id/recent_messages'
+        this.mappings = {
+          recent_messages: {
+            url: this.url
+          }
+        }
+        const url = config(
+          this.mappings, 'recent_messages', 'find', {conversation_id: 'abc'}, {params: {id: '123xyz'}}
+        ).url
+        expect(url).to.eql('http://cool.com/conversations/abc/recent_messages/123xyz')
+      })
     })
 
     describe ('can handle custom identifiers in REST actions', function() {
@@ -106,58 +218,32 @@ describe('configuration', function() {
             identifier: 'uid'
           }
         }
+        const url = config(this.mappings, 'todos', 'create', {uid: 123}).url
+        expect(url).to.eql('http://todos.com/todos')
+      })
+
+      it ('returns the correct findAll (GET) url', function() {
+        this.url = 'http://todos.com/todos'
+        this.mappings = {
+          todos: {
+            url: this.url,
+            identifier: 'uid'
+          }
+        }
         const url = config(this.mappings, 'todos', 'findAll', {uid: 123}).url
         expect(url).to.eql('http://todos.com/todos')
       })
-    })
-  })
 
-  describe ('model', function() {
-    describe('no option passed in', function(){
-      it ('defaults to false', function() {
-        const model = config(this.mappings, 'todos', 'find').model
-        expect(model).to.be.false
-      })
-    })
-    describe('true is passed in', function(){
-      it ('throws an error', function() {
-        const mappings = {todos: {...this.mappings.todos, model: true}}
-        expect(() => {
-          config(mappings, 'todos', 'find').model
-        }).to.throw(Error, "You must provide a class name or constructor function." +
-          " Received: 'true'");
-      })
-    })
-    describe('class constant is passed in', function() {
-      class Todo {}
-
-      it ('returns the function', function() {
-        const mappings = {todos: {...this.mappings.todos, model: Todo}}
-        const model = config(mappings, 'todos', 'find').model
-        expect(new model).to.be.an.instanceof(Todo);
-      })
-    })
-  })
-
-  describe ('root', function() {
-    describe('no option passed in', function(){
-      it ('defaults to true', function() {
-        const root = config(this.mappings, 'todos', 'find').root
-        expect(root).to.be.true
-      })
-    })
-    describe('false is passed in', function() {
-      it ('returns false', function() {
-        const mappings = {todos: {...this.mappings.todos, root: false}}
-        const root = config(mappings, 'todos', 'find').root
-        expect(root).to.be.false
-      })
-    })
-    describe('non-boolean value is passed in', function() {
-      it ('throws an error', function() {
-        const mappings = {todos: {...this.mappings.todos, root: 'string'}}
-        const root = () => config(mappings, 'todos', 'find').root
-        expect(root).to.throw(Error, "'root' option must be a boolean value.");
+      it ('returns the correct DELETE url', function() {
+        this.url = 'http://todos.com/todos'
+        this.mappings = {
+          todos: {
+            url: this.url,
+            identifier: 'uid'
+          }
+        }
+        const url = config(this.mappings, 'todos', 'delete', {uid: 123}).url
+        expect(url).to.eql('http://todos.com/todos/123')
       })
     })
   })
