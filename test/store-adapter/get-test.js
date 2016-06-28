@@ -3,14 +3,6 @@ import {expect} from 'chai'
 import storeAdapter from '../../src/plain-js-store-adapter'
 
 describe('get', function() {
-  it ('throws an error if the path is undefined', function() {
-    const adapter = storeAdapter();
-
-    expect(() => adapter.get('todos')).to.throw(Error,
-      "No path: 'todos' exists in the store"
-    )
-  })
-
   describe('invalid query arguments', function() {
     describe('query object is empty', function(done) {
       it ('throws an error', function() {
@@ -94,6 +86,22 @@ describe('get', function() {
           const adapter = storeAdapter({todo: {id: 1, a: 'a'}});
 
           return adapter.get('todo', {a: 'a'}).then(data => {
+            expect(data).to.eql({id: 1, a: 'a'});
+          })
+        })
+      })
+
+      describe('nested store path', function() {
+        it ('returns the data at the nested path', function() {
+          const adapter = storeAdapter({
+            todo: {
+              nested: {
+                deep: {id: 1, a: 'a'}
+              }
+            }
+          });
+
+          return adapter.get('todo.nested.deep', {id: 1}).then(data => {
             expect(data).to.eql({id: 1, a: 'a'});
           })
         })

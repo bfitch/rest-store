@@ -3,14 +3,6 @@ import {expect} from 'chai'
 import storeAdapter from '../../src/plain-js-store-adapter'
 
 describe('insert', function() {
-  it ('throws an error if the path is undefined', function() {
-    const adapter = storeAdapter();
-
-    expect(() => adapter.insert('todos')).to.throw(Error,
-      "No path: 'todos' exists in the store"
-    )
-  })
-
   describe('inserting a collection', function() {
     it ('throws an error if the store path is not a collection', function() {
       const adapter = storeAdapter({todos: {}});
@@ -79,6 +71,30 @@ describe('insert', function() {
         expect(data).to.equal(emptyObject);
       })
       expect(cache.todos).to.eql([emptyObject]);
+    })
+  })
+
+  describe('nested store path', function() {
+    it ('replaces the object at the path with the new object', function() {
+      const cache = {
+        todo: {
+          nested: {
+            deep: {id: 1, a: 'a'}
+          }
+        }
+      };
+      const adapter = storeAdapter(cache);
+
+      return adapter.insert('todo.nested.deep', {id: 2, b: 'b'}).then(data => {
+        expect(data).to.eql({id: 2, b: 'b'});
+        expect(cache).to.eql({
+          todo: {
+            nested: {
+              deep: {id: 2, b: 'b'}
+            }
+          }
+        });
+      });
     })
   })
 })

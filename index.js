@@ -30,14 +30,12 @@ export function restStore(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) 
             const transformedData = transformResponse(fetchedData, storeAdapter, options);
             return storeAdapter.update(path, transformedData[identifier], transformedData, {replace: true});
           })
-          .then(data => Array.isArray(data) ? data.pop() : data)
       } else {
         return storeAdapter.get(path, query).then(data => {
           if (data) return data;
 
           return ajaxAdapter.find(url, params, headers)
             .then(data => storeAdapter.insert(path, transformResponse(data, storeAdapter, options)))
-            .then(data => Array.isArray(data) ? data.pop() : data);
         });
       }
     },

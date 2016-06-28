@@ -5,14 +5,6 @@ import storeAdapter from '../../src/plain-js-store-adapter'
 describe('updateAll', function() {
   const mappings = {todos: {}};
 
-  it ('throws an error if the path is undefined', function() {
-    const adapter = storeAdapter({}, mappings);
-
-    expect(() => adapter.updateAll('todos')).to.throw(Error,
-      "No path: 'todos' exists in the store"
-    )
-  })
-
   it ('throws an error if the path is not an array', function() {
     const adapter = storeAdapter({todos: {}}, {todos: {}});
 
@@ -94,6 +86,42 @@ describe('updateAll', function() {
         {id: 1, boo: 'boo'},
         {id: 5, cool: 'cool'}
       ]);
+    })
+  })
+
+  describe('nested store path', function() {
+    it ('updates data at the nested path', function() {
+      const cache = {
+        todos: {
+          deep: {
+            nested: [
+              {id: 1, title: 'foo'},
+              {id: 2, title: 'foo'},
+              {id: 3, title: 'foo'}
+            ]
+          }
+        }
+      };
+      const newCollection = [
+        {id: 1, other: 'big baby'},
+        {id: 2, title: 'bigger'},
+        {id: 4, title: 'biggest'}
+      ]
+
+      const adapter = storeAdapter(cache, mappings);
+
+      return adapter.updateAll('todos.deep.nested', newCollection).then(data => {
+        expect(data).to.eql([
+          {id: 1, title: 'foo', other: 'big baby'},
+          {id: 2, title: 'bigger'},
+          {id: 4, title: 'biggest'}
+        ]);
+        expect(cache.todos.deep.nested).to.eql([
+          {id: 1, title: 'foo', other: 'big baby'},
+          {id: 2, title: 'bigger'},
+          {id: 4, title: 'biggest'}
+        ]);
+      })
     })
   })
 })

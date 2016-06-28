@@ -5,14 +5,6 @@ import storeAdapter from '../../src/plain-js-store-adapter'
 describe('updateWhere', function() {
   const mappings = {todos: {}};
 
-  it ('throws an error if the path is undefined', function() {
-    const adapter = storeAdapter({}, mappings);
-
-    expect(() => adapter.updateWhere('todos')).to.throw(Error,
-      "No path: 'todos' exists in the store"
-    )
-  })
-
   describe('store path is a collection', function() {
     it ('finds the object by id and replaces it', function() {
       const cache   = {todos: [{id: 1, foo: 'foo'}, {id: 5, bar: 'bar'}]};
@@ -57,7 +49,7 @@ describe('updateWhere', function() {
       const cache   = {todo: {id: 5, bar: 'bar'}};
       const adapter = storeAdapter(cache, mappings);
       const attrs   = {id: 5, woot: 'woot'};
-  
+
       return adapter.updateWhere('todo', {id: 5}, attrs, {replace: true}).then(data => {
         expect(data).to.eql({id: 5, woot: 'woot'});
         expect(cache.todo).to.eql({id: 5, woot: 'woot'});
@@ -71,6 +63,31 @@ describe('updateWhere', function() {
       return adapter.updateWhere('todo', {id: 1}).then(data => {
         expect(data).to.eql({id: 1, foo: 'foo'});
         expect(cache.todo).to.be.null;
+      })
+    })
+  })
+
+  describe('nested store path', function() {
+    it ('finds the object by id and replaces it', function() {
+      const cache = {
+        todos: {
+          deep: {
+            nested: [
+              {id: 1, foo: 'foo'},
+              {id: 5, bar: 'bar'}
+            ]
+          }
+        }
+      }
+      const adapter = storeAdapter(cache, mappings);
+      const attrs   = {id: 5, woot: 'woot'};
+
+      return adapter.updateWhere('todos.deep.nested', {id: 5}, attrs, {replace: true}).then(data => {
+        expect(data).to.eql({id: 5, woot: 'woot'});
+        expect(cache.todos.deep.nested).to.eql([
+          {id: 1, foo: 'foo'},
+          {id: 5, woot: 'woot'}
+        ]);
       })
     })
   })

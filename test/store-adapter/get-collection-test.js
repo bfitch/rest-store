@@ -3,14 +3,6 @@ import {expect} from 'chai'
 import storeAdapter from '../../src/plain-js-store-adapter'
 
 describe('getCollection', function() {
-  it ('throws an error if the path is undefined', function() {
-    const adapter = storeAdapter();
-
-    expect(() => adapter.getCollection('todos')).to.throw(Error,
-      "No path: 'todos' exists in the store"
-    )
-  })
-
   it ('throws an error if data at the path is not an array', function() {
     const adapter = storeAdapter({todos: {}});
 
@@ -111,6 +103,22 @@ describe('getCollection', function() {
             expect(data).to.be.null;
           })
         })
+      })
+    })
+  })
+
+  describe('nested store path', function() {
+    it ('returns the data at the nested path', function() {
+      const adapter = storeAdapter({
+        todos: {
+          nested: {
+            deep: [{id: 1, a: 'a'}, {id: 2, b: 'b'}]
+          }
+        }
+      });
+
+      return adapter.getCollection('todos.nested.deep', {id: 2}).then(data => {
+        expect(data).to.eql([{id: 2, b: 'b'}]);
       })
     })
   })

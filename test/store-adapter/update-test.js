@@ -5,14 +5,6 @@ import storeAdapter from '../../src/plain-js-store-adapter'
 describe('update', function() {
   const mappings = {todos: {}};
 
-  it ('throws an error if the path is undefined', function() {
-    const adapter = storeAdapter({}, mappings);
-
-    expect(() => adapter.update('todos')).to.throw(Error,
-      "No path: 'todos' exists in the store"
-    )
-  })
-
   it ('throws if attrs are a collection', function() {
     const cache   = {todos: []};
     const adapter = storeAdapter(cache, mappings);
@@ -105,6 +97,26 @@ describe('update', function() {
       return adapter.update('todo', 1).then(data => {
         expect(data).to.eql({id: 1, foo: 'foo'});
         expect(cache.todo).to.be.null;
+      })
+    })
+  })
+
+  describe('nested store path', function() {
+    const mappings = {todo: {}};
+    const cache = {
+      todo: {
+        nested: {
+          deep: {id: 5, bar: 'bar'}
+        }
+      }
+    };
+    const adapter = storeAdapter(cache, mappings);
+    const attrs   = {id: 5, woot: 'woot'};
+
+    it ('updates data at the nested path', function() {
+      return adapter.update('todo.nested.deep', 5, attrs).then(data => {
+        expect(data).to.eql({id: 5, bar: 'bar', woot: 'woot'});
+        expect(cache.todo.nested.deep).to.eql({id: 5, bar: 'bar', woot: 'woot'});
       })
     })
   })
