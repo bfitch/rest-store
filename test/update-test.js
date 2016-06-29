@@ -99,6 +99,33 @@ describe('update', function() {
           });
         })
       })
+
+      describe('nested store path', function() {
+        mockServer
+          .put('/todos/1', {a: 'a', c: 'c'})
+          .reply(200, function(uri, requestBody) {
+            return {todo: JSON.parse(requestBody)};
+          });
+
+        const cache = {
+          todos: {
+            nested: [{id: 1, a: 'a'}]
+          }
+        };
+        const storeAdapter = jsStoreAdapter(cache, mappings);
+        const store        = restStore(mappings, storeAdapter);
+
+        it ('POSTs to the server and replaces the cid with the response data', function() {
+          return store.update('todos.nested', {id: 1}, {id: 1, a: 'a', c: 'c'}).then(data => {
+            expect(data).to.eql({id: 1, a: 'a', c: 'c'});
+            expect(cache).to.eql({
+              todos: {
+                nested: [{id: 1, a: 'a', c: 'c'}]
+              }
+            })
+          })
+        })
+      })
     })
   })
 })

@@ -69,37 +69,32 @@ updateAll(storeCollection, collectionToUpdate, {replace: true || remove: true})
     - each record in collectionToUpdate
       update(storeCollection, record.identifier, {remove: true})
 
-
-
-
-
-
 Chores
 
-1. Propogate promise errors! (re-raise in catch()? )
+DONE! 1. Propogate promise errors! (re-raise in catch()? )
 
 DONE! 2. Make axiosAdapter and plain-js-store-adapter Singletons?
   - set runtime config (root, model, identifier) via API methods:
     - `ajaxAdapter.setConfig({root: 'foo', model: 'bar'})`
     - access config inside adapters from `this.identifier` or `this.root`
 
-3. Move storeAdapter and ajaxAdapter code and tests into separate files
+DONE! 3. Move storeAdapter and ajaxAdapter code and tests into separate files
 
 Tests
 
-1. Finish integration tests for: create, update, delete
+DONE! 1. Finish integration tests for: create, update, delete
 
 DONE! 2. Tests for public store adapter methods
 
-3. Store: check models get instantiated on create and inserted into the store
+CANNED 3. Store: check models get instantiated on create and inserted into the store
 
-4. Test dynamic segments in parse-url
+DONE! 4. Test dynamic segments in parse-url
 
-5. Write big integration test script to make sure no bugs with Singleton state
+CANNED 5. Write big integration test script to make sure no bugs with Singleton state
 
 Features
 
-NOPE! 1. Merge find/findAll clientQuery into http params hash
+CANNED 1. Merge find/findAll clientQuery into http params hash
   - should be done in configuration.js
 
 DONE! 2. Expose raw store `cache` from store adapter
@@ -107,15 +102,53 @@ DONE! 2. Expose raw store `cache` from store adapter
 DONE! 3. Expose raw ajax lib (`http`) from axios adapter
   - make sure you can set global config: headers, etc.
 
-4. Set global and per resource TTL (unix timestamp) cache busting
+DONE! 5. afterFetch() and beforeRequest() callbacks
 
-5. afterFetch() and beforeRequest() callbacks
+DONE 6. Handle nested store paths
 
+-------------------------
+
+7. Clean up ajaxAdapter implementation
+
+8. Add ajaxAdapter tests
+
+9. Implement CerebralStoreAdapter
+
+10. Clean up file structure and get tests running with one command
+
+11. add ESlint (Standard Style)
+
+12. sample app with CerebralStoreAdapter
+
+Pre-Launch
+
+2. Logo, Website, Quick Demo
+3. API documentation (generated)
+4. Travis CI
+5. Coveralls, nyc (code coverage)
+6. npm badge
+7. updated dependencies badge
+8. Standard Style badge
+9. Code Climate?
 
 -----------------------------
 v2.0
 
-- Integrate normalzr or handle normalizing data automatically?
+1. Return response object with data from ajaxAdapter
+  store.find('todos', {id: 1}).then(response => {
+    // {
+      rawResponse: ajaxAdapter.response || {}
+      data: data
+    }
+  })
+
+2. Add flow
+
+3. Set global and per resource TTL (unix timestamp) cache busting
+
+4. MobxStoreAdapter
+
+CANNED - Integrate normalzr or handle normalizing data automatically?
 
 -------------------------------------------
 

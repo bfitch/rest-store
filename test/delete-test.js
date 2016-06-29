@@ -84,7 +84,7 @@ describe('delete', function() {
       sinon.collection.restore();
     })
 
-    describe ('server roundtrip', function() {
+    describe('server roundtrip', function() {
       mockServer
         .delete('/todos/1')
         .reply(200, function(uri, requestBody) {
@@ -120,6 +120,33 @@ describe('delete', function() {
 
             expect(cache.todos).to.eql([{id: 1, a: 'a'}]);
           });
+        })
+      })
+
+      describe('nested store path', function() {
+        mockServer
+          .delete('/todos/1')
+          .reply(200, function(uri, requestBody) {
+            return {todo: JSON.parse(requestBody)}
+          })
+
+        const cache = {
+          todos: {
+            deep: {
+              nested: {
+                path: [{id: 1, a: 'a'}]
+              }
+            }
+          }
+        }
+        const storeAdapter = jsStoreAdapter(cache, mappings);
+        const store        = restStore(mappings, storeAdapter);
+
+        it ('removes the object from the store and sends a DELETE to the server', function() {
+          return store.delete('todos.deep.nested.path', {id: 1}).then(data => {
+            expect(data).to.eql({id: 1, a: 'a'});
+            expect(cache.todos.deep.nested.path).to.be.empty;
+          })
         })
       })
     })

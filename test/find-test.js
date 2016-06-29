@@ -111,6 +111,41 @@ describe('find', function() {
           });
         })
       })
+
+      describe('nested store path', function() {
+        mockServer
+          .get('/todos/5')
+          .reply(200, {todo: {id: 5, woot: 'woot' }});
+
+        const cache = {
+          todos: {
+            deep: {
+              nested: [{id: 1, a: 'a'}, {id: 3, c: 'c'}]
+            }
+          }
+        };
+        const storeAdapter = jsStoreAdapter(cache);
+        const store        = restStore(mappings, storeAdapter);
+
+        it ('performs an ajax request and adds the data to the store', function() {
+          return store.find('todos.deep.nested', {id: 5}).then(data => {
+            expect(data).to.eql({id: 5, woot: 'woot' });
+          })
+          .then(() => {
+            expect(cache).to.eql({
+              todos: {
+                deep: {
+                  nested: [
+                    {id: 1, a: 'a'},
+                    {id: 3, c: 'c'},
+                    {id: 5, woot: 'woot'}
+                  ]
+                }
+              }
+            });
+          })
+        })
+      })
     })
   })
 })

@@ -123,6 +123,43 @@ describe('findAll', function() {
           ]});
         })
       })
+
+      describe('nested store path', function() {
+        mockServer
+          .get('/blah')
+          .reply(200, {todos: response});
+
+        const cache = {
+          todos: {
+            deep: {
+              nested: [{id: 4, foo: 'b'}, {id: 5, foo: 'c'}]
+            }
+          }
+        };
+        const storeAdapter = jsStoreAdapter(cache, mappings);
+        const store        = restStore(mappings, storeAdapter);
+
+        it ('performs an ajax request and merges data into the store', function() {
+          return store.findAll('todos.deep.nested', {foo: 'a'}).then(data => {
+            expect(data).to.eql([
+              {id: 1, foo: 'a'},
+              {id: 2, foo: 'a'},
+              {id: 3, foo: 'a'},
+            ]);
+            expect(cache).to.eql({
+              todos: {
+                deep: {
+                  nested: [
+                    {id: 1, foo: 'a'},
+                    {id: 2, foo: 'a'},
+                    {id: 3, foo: 'a'}
+                  ]
+                }
+              }
+            });
+          })
+        })
+      })
     })
   })
 })

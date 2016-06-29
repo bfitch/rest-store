@@ -72,7 +72,7 @@ describe('create', function() {
       sinon.collection.restore();
     })
 
-    describe ('server roundtrip', function() {
+    describe('server roundtrip', function() {
       mockServer
         .post('/todos', {c: 'c'})
         .reply(201, function(uri, requestBody) {
@@ -106,6 +106,39 @@ describe('create', function() {
 
             expect(cache.todos).to.be.empty;
           });
+        })
+      })
+
+      describe('nested store path', function() {
+        const cache = {
+          todos: {
+            deep: {
+              nested: [{id: 1, a: 'a'}]
+            }
+          }
+        };
+        const storeAdapter = jsStoreAdapter(cache, mappings);
+        const store        = restStore(mappings, storeAdapter);
+
+        mockServer
+          .post('/todos', {c: 'c'})
+          .reply(201, function(uri, requestBody) {
+            return {todo: Object.assign(
+              {id: 3}, JSON.parse(requestBody)
+            )}
+          });
+
+        it ('POSTs to the server and replaces the cid with the response data', function() {
+          return store.create('todos.deep.nested', {c: 'c'}).then(data => {
+            expect(data).to.eql({id: 3, c: 'c'});
+            expect(cache).to.eql({
+              todos: {
+                deep: {
+                  nested: [{id: 1, a: 'a'}, {id: 3, c: 'c'}]
+                }
+              }
+            });
+          })
         })
       })
     })

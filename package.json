@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack --devtool source-map --progress --colors --watch",
     "build": "webpack --progress --colors",
-    "test": "mocha --compilers js:babel-register --reporter spec --colors"
+    "test": "mocha --compilers js:babel-register --reporter spec --colors test/**"
   },
   "peerDependencies": {},
   "dependencies": {

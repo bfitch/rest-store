@@ -70,17 +70,17 @@ describe('storeAdapter', function() {
       expect(getPath(cache, 'foo.bar.baz')).to.be.undefined;
     })
 
-    it ('returns throws a helpful error message if there\'s no matching path', function() {
+    it ('throws an error if the path\'s first key doesn\'t match', function() {
       expect(() => { getPath(cache, 'fee.bar.baz') }).to.throw(Error,
         'The key: \'fee\' in path: \'fee.bar.baz\' could not be found in the store');
     })
 
-    it ('returns throws a helpful error message if there\'s no matching path', function() {
+    it ('throws an error if the path\'s second key doesn\'t match', function() {
       expect(() => { getPath(cache, 'foo.bree.baz') }).to.throw(Error,
         'The key: \'bree\' in path: \'foo.bree.baz\' could not be found in the store');
     })
 
-    it ('returns throws a helpful error message if there\'s no matching path', function() {
+    it ('throws an error if the path\'s last key doesn\'t match', function() {
       expect(() => { getPath(cache, 'foo.bar.bee') }).to.throw(Error,
         'The key: \'bee\' in path: \'foo.bar.bee\' could not be found in the store');
     })

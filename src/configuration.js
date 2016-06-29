@@ -27,7 +27,6 @@ export default function(mappings, pathString, method, query = {}, httpOptions = 
     get url() {
       return parseUrl(method, url, identifier, routeParams);
     },
-    path,
     params,
     headers,
     force,
