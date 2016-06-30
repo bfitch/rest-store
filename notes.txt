@@ -108,7 +108,7 @@ DONE 6. Handle nested store paths
 
 -------------------------
 
-7. Clean up ajaxAdapter implementation
+DONE 7. Clean up ajaxAdapter implementation
 
 8. Add ajaxAdapter tests
 
