@@ -1,6 +1,7 @@
 import uuid from 'node-uuid';
 import axiosAdapter from './src/axios-adapter';
-import jsStoreAdapter from './src/plain-js-store-adapter';
+import jsStoreAdapter from './src/js-store-adapter';
+import cerebralStoreAdapter from './src/cerebral-store-adapter';
 import config from './src/configuration';
 import {isEmpty} from './src/utils';
 const {assign} = Object;
@@ -177,4 +178,4 @@ export function restStore(mappings, storeAdapter, ajaxAdapter = axiosAdapter()) 
   }
 }
 
-export {jsStoreAdapter};
+export {jsStoreAdapter, cerebralStoreAdapter};

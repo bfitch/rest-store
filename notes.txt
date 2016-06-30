@@ -73,7 +73,7 @@ Chores
 
 DONE! 1. Propogate promise errors! (re-raise in catch()? )
 
-DONE! 2. Make axiosAdapter and plain-js-store-adapter Singletons?
+DONE! 2. Make axiosAdapter and js-store-adapter Singletons?
   - set runtime config (root, model, identifier) via API methods:
     - `ajaxAdapter.setConfig({root: 'foo', model: 'bar'})`
     - access config inside adapters from `this.identifier` or `this.root`
@@ -112,7 +112,7 @@ DONE 7. Clean up ajaxAdapter implementation
 
 8. Add ajaxAdapter tests
 
-9. Implement CerebralStoreAdapter
+DONE! 9. Implement CerebralStoreAdapter
 
 10. Clean up file structure and get tests running with one command
 

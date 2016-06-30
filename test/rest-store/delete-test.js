@@ -1,10 +1,10 @@
 import {describe,it} from 'mocha';
 import {expect} from 'chai';
 import sinon from 'sinon';
-import {restStore} from '../index';
-import jsStoreAdapter from '../src/plain-js-store-adapter';
-import axiosAdapter from '../src/axios-adapter';
 import nock from 'nock';
+import {restStore} from '../../index';
+import jsStoreAdapter from '../../src/js-store-adapter';
+import axiosAdapter from '../../src/axios-adapter';
 
 describe('delete', function() {
   const mockServer = nock('http://todos.com');
