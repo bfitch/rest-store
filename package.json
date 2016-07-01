@@ -1,11 +1,12 @@
 {
   "name": "rest-store",
   "version": "0.0.1",
-  "description": "Fetch resources in-memory or remotely using REST conventions",
+  "description": "Sync your client-side state store with REST APIs",
   "main": "dist/index.js",
   "scripts": {
     "start": "webpack --devtool source-map --progress --colors --watch",
     "build": "webpack --progress --colors",
+    "_pretest": "standard",
     "mocha": "mocha --compilers js:babel-register --reporter spec --colors test/**",
     "test": "cross-env NODE_ENV=test nyc -r lcov -r text npm run mocha"
   },
@@ -17,7 +18,9 @@
     "sourceMap": false,
     "instrument": false
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "cerebral-model-baobab": "^0.4.9"
+  },
   "dependencies": {
     "axios": "^0.9.1",
     "node-uuid": "^1.4.7",
@@ -29,7 +32,6 @@
     "babel-loader": "^6.2.1",
     "babel-plugin-__coverage__": "^11.0.0",
     "babel-preset-es2015": "^6.3.13",
-    "babel-preset-react": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13",
     "babel-register": "^6.4.3",
     "chai": "^3.4.1",
@@ -38,6 +40,7 @@
     "nock": "^7.2.2",
     "nyc": "^6.6.1",
     "sinon": "^1.17.4",
+    "standard": "^7.1.2",
     "webpack": "^1.12.11"
   },
   "repository": {
