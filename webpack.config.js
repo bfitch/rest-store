@@ -1,19 +1,19 @@
-var path = require('path');
+var path = require('path')
 
 module.exports = {
-  entry: __dirname + '/index.js',
-	output: {
-    path: __dirname + '/dist',
-		filename: "index.js",
-		library: "RestStore",
-		libraryTarget: "umd"
-	},
+  entry: path.resolve('index.js'),
+  output: {
+    path: path.join('dist'),
+    filename: 'index.js',
+    library: 'RestStore',
+    libraryTarget: 'umd'
+  },
   module: {
     loaders: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: "babel",
+        loader: 'babel',
         query: {
           presets: ['es2015', 'stage-0']
         }
@@ -21,9 +21,9 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ["", ".js"]
-  },
-  // node: {
-  //   global: false
-  // }
+    extensions: ['', '.js']
+  }
+// node: {
+//   global: false
+// }
 }

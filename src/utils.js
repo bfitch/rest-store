@@ -1,9 +1,9 @@
-export function isEmpty(object) {
+export function isEmpty (object) {
   if (!object) {
-    return true;
+    return true
   } else if (object.constructor.name === 'Array') {
-    return !object.length > 0;
+    return !object.length > 0
   } else {
-    return !Object.keys(object).length > 0;
+    return !Object.keys(object).length > 0
   }
 }

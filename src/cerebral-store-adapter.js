@@ -146,7 +146,7 @@ function queryStore (method, cachedData, query) {
   let result
 
   if (isArray(cachedData)) {
-    result = cachedData[method].call(cachedData, (item) => {
+    result = cachedData[method](item => {
       return Object.keys(query).reduce((bool, queryKey) => {
         return bool && (item[queryKey] === query[queryKey])
       }, true)

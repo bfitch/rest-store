@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack --devtool source-map --progress --colors --watch",
     "build": "webpack --progress --colors",
-    "_pretest": "standard",
+    "pretest": "standard",
     "mocha": "mocha --compilers js:babel-register --reporter spec --colors test/**",
     "test": "cross-env NODE_ENV=test nyc -r lcov -r text npm run mocha"
   },
@@ -17,6 +17,11 @@
     ],
     "sourceMap": false,
     "instrument": false
+  },
+  "standard": {
+    "ignore": [
+      "/dist"
+    ]
   },
   "peerDependencies": {
     "cerebral-model-baobab": "^0.4.9"

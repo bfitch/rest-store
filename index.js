@@ -4,7 +4,7 @@ import jsStoreAdapter from './src/js-store-adapter'
 import cerebralStoreAdapter from './src/cerebral-store-adapter'
 import config from './src/configuration'
 import { isEmpty } from './src/utils'
-const {assign} = Object
+const { assign } = Object
 
 export function restStore (mappings, storeAdapter, ajaxAdapter = axiosAdapter()) {
   if (!storeAdapter) throw new Error('No storeAdapter. You must provide an in-memory store')
