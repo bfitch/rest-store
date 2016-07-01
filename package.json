@@ -6,7 +6,16 @@
   "scripts": {
     "start": "webpack --devtool source-map --progress --colors --watch",
     "build": "webpack --progress --colors",
-    "test": "mocha --compilers js:babel-register --reporter spec --colors test/**"
+    "mocha": "mocha --compilers js:babel-register --reporter spec --colors test/**",
+    "test": "cross-env NODE_ENV=test nyc -r lcov -r text npm run mocha"
+  },
+  "nyc": {
+    "include": [
+      "src/*.js",
+      "index.js"
+    ],
+    "sourceMap": false,
+    "instrument": false
   },
   "peerDependencies": {},
   "dependencies": {
@@ -18,13 +27,16 @@
   "devDependencies": {
     "babel-core": "^6.4.0",
     "babel-loader": "^6.2.1",
+    "babel-plugin-__coverage__": "^11.0.0",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13",
     "babel-register": "^6.4.3",
     "chai": "^3.4.1",
+    "cross-env": "^1.0.8",
     "mocha": "^2.3.4",
     "nock": "^7.2.2",
+    "nyc": "^6.6.1",
     "sinon": "^1.17.4",
     "webpack": "^1.12.11"
   },
