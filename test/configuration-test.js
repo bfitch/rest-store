@@ -59,13 +59,55 @@ describe('configuration', function () {
   describe('transformResponse hook', function () {
     const mappings = {
       todos: {
-        transformResponse: function () { return 'woot' }
+        transformResponse: {
+          transforms: function () { return 'woot' }
+        }
       }
     }
 
     it('sets a custom function to transform http responses', function () {
       const c = config(mappings, 'todos', 'find')
       expect(c.transformResponse()).to.eql('woot')
+    })
+
+    describe('user provided pipeline of transformations', function () {
+      const mappings = {
+        todos: {
+          transformResponse: {
+            transforms: [
+              (x) => x + 1,
+              (x) => x + 3,
+              (x) => x - 5
+            ],
+            defaultTransform: false
+          }
+        }
+      }
+      it('runs all the transformations in order and returns the last result', function () {
+        const c = config(mappings, 'todos', 'find')
+        expect(c.transformResponse(1)).to.equal(0)
+      })
+
+      it('runs the default default transformer before user defined transforms', function () {
+        const mappings = {
+          todos: {
+            transformResponse: {
+              transforms: [
+                (obj) => (Object.assign(obj, {x: 2, b: 'neat'})),
+                (obj) => (Object.assign(obj, {y: 3, c: 'cool'})),
+                (obj) => (Object.assign(obj, {z: 4, d: 'jammin'}))
+              ]
+            }
+          }
+        }
+        const c = config(mappings, 'todos', 'find')
+        expect(c.transformResponse({q: 1, a: 'wow'})).to.eql({
+          q: 1, a: 'wow',
+          x: 2, b: 'neat',
+          y: 3, c: 'cool',
+          z: 4, d: 'jammin'
+        })
+      })
     })
   })
 

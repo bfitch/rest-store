@@ -1,3 +1,63 @@
+{
+  todos: {
+    1: {
+      title: 'foo',
+      a: 'a'
+    },
+    2: {
+      title: 'boo',
+      b: 'b'
+    },
+    4: {
+      title: 'doo',
+      c: 'c'
+    }
+  }
+}
+
+// FIND
+store.find('todos.3')
+  if null and no query
+  get identifier from last path
+  build url and GET request
+  transformResponse to objectById
+  merge into 'todos' (adding the objectById)
+
+// FIND ALL
+store.findAll('todos', (todos) => {
+  return Object.values(todos).filter(todo => todo.a);
+})
+  check for data in the store using query function
+  if falsey, issue GET request
+  transformResponse to objectsById
+  replace 'todos' with objectsById
+
+// CREATE
+store.create('todos', {title: 'wow', a: 'a'})
+    optimistc:
+      merge attrs with uuid key into object
+      success:
+        transformResponse to objectById
+        remove optimistc object by uuid key
+        merge objectBId into 'todos' object
+      fail:
+        remove optimistic object by uuid key
+
+// UPDATE
+store.update('todos', {id: 1}, {id: 1, a: 'a'})
+
+store.update('todos.1', {}, {a: 'a'})
+store.update('todos', {id: 1}, {a: 'a'})
+store.update('todos', {}, {id: 1, a: 'a'})
+
+// DELETE
+store.delete('todos', {id: 2})
+
+store.delete('todos.2')
+
+
+
+
 insert(collection, attrs) // add or replace by id, returns added record
 
 updateById(collection, id, attrs) // merges and returns the record
@@ -114,9 +174,9 @@ DONE 7. Clean up ajaxAdapter implementation
 
 DONE! 9. Implement CerebralStoreAdapter
 
-10. Clean up file structure and get tests running with one command
+DONE! 10. Clean up file structure and get tests running with one command
 
-11. add ESlint (Standard Style)
+DONE! 11. add ESlint (Standard Style)
 
 12. sample app with CerebralStoreAdapter
 
@@ -143,6 +203,8 @@ v2.0
   })
 
 2. Add flow
+
+3. Validation hook before inserting into the store
 
 3. Set global and per resource TTL (unix timestamp) cache busting
 

@@ -102,14 +102,12 @@ describe('find', function () {
       it('performs an ajax request and adds the data to the store', function () {
         return store.find('todos', {id: 5}).then(data => {
           expect(data).to.eql({id: 5, woot: 'woot'})
-        })
-          .then(() => {
-            expect(cache).to.eql({todos: [
-                {id: 1, a: 'a'},
-                {id: 3, c: 'c'},
-                {id: 5, woot: 'woot'}]
-            })
+          expect(cache).to.eql({todos: [
+            {id: 1, a: 'a'},
+            {id: 3, c: 'c'},
+            {id: 5, woot: 'woot'}]
           })
+        })
       })
 
       describe('nested store path', function () {
@@ -147,5 +145,55 @@ describe('find', function () {
         })
       })
     })
+  })
+
+  describe('collection indexed by id', function () {
+    const cache = {
+      todos: {
+        1: {
+          a: 'a'
+        },
+        2: {
+          b: 'b'
+        },
+        4: {
+          c: 'c'
+        }
+      }
+    }
+    const mappings = {
+      todos: {
+        url: 'http://todos.com/todos',
+        transformResponse: { transforms: [indexById] }
+      }
+    }
+
+    describe('object is in the store', function () {
+      const storeAdapter = jsStoreAdapter(cache)
+      const store = restStore(mappings, storeAdapter)
+
+      it('returns the object from the store', function () {
+        return store.find('todos.2').then(data => {
+          expect(data).to.eql({id: 2, b: 'b'})
+          expect(cache).to.eql({
+            todos: {
+              1: { a: 'a' },
+              2: { b: 'b' },
+              4: { c: 'c' }
+            }
+          })
+        })
+      })
+    })
+
+    describe('object is not in the store', function () {
+      it('does the right thing')
+    })
+
+    function indexById (response, store, {identifier}) {
+      return response.reduce((indexed, {[identifier]: id, ...rest}) => {
+        return {...indexed, [id]: rest}
+      }, {})
+    }
   })
 })

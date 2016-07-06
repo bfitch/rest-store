@@ -1,4 +1,5 @@
 import parseUrl from './parse-url'
+const isArray = Array.isArray
 
 export default function (mappings, pathString, method, query = {}, httpOptions = {}) {
   if (!pathString) throw new Error('You must provide a path')
@@ -11,7 +12,7 @@ export default function (mappings, pathString, method, query = {}, httpOptions =
   const {
     url,
     identifier = 'id',
-    transformResponse = defaultTransformResponse
+    transformResponse = {transforms: defaultResponseTransform}
   } = mappings[path]
 
   const {
@@ -32,11 +33,28 @@ export default function (mappings, pathString, method, query = {}, httpOptions =
     force,
     query,
     identifier,
-    transformResponse
+    transformResponse: composeTransformations(transformResponse)
   }
 }
 
-function defaultTransformResponse (response, store, config) {
+function composeTransformations ({transforms, defaultTransform = {defaultTransform: true}}) {
+  if (isArray(transforms)) {
+    const fullTransforms = defaultTransform
+      ? [defaultResponseTransform].concat(transforms)
+      : transforms
+
+    return function (response, store, config) {
+      return fullTransforms.reduce((value, fn) => {
+        return fn(value, store, config)
+      }, response)
+    }
+  } else {
+    // single function, not a pipeline
+    return transforms || defaultResponseTransform
+  }
+}
+
+function defaultResponseTransform (response, store, config) {
   const keys = Object.keys(response)
   return (keys.length === 1) ? response[keys.pop()] : response
 }

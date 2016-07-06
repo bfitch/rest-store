@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for rest-store/src/cerebral-store-adapter.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">rest-store/src/</a> cerebral-store-adapter.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">97.5% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>117/120</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">95% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>57/60</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>14/14</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>89/89</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">26×</span>
+<span class="cline-any cline-yes">47×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">47×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">20×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20×</span>
+<span class="cline-any cline-yes">19×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">19×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">31×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22×</span>
+<span class="cline-any cline-yes">19×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">29×</span>
+<span class="cline-any cline-yes">33×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import Model from 'cerebral-model-baobab'
+import config from './configuration'
+import { isEmpty } from './utils'
+const {isArray} = Array
+const {assign} = Object
+const NOT_FOUND = -1
+&nbsp;
+export default function (model = <span class="cstat-no" title="statement not covered" >Model(),</span> mappings = {}) {
+  const store = model({on () {}})
+&nbsp;
+  return {
+    cache: store,
+&nbsp;
+    get (pathString, query) {
+      const path = pathString.split('.')
+      if (isEmpty(query)) throw new Error('You must provide a query when getting items from the store')
+      return Promise.resolve(queryStore('find', store.accessors.get(path), query))
+    },
+&nbsp;
+    getCollection (pathString, query) {
+      const path = pathString.split('.')
+      if (!isArray(store.accessors.get(path))) {
+        throw new Error(`getCollection() requies the path: '${pathString}' to be an array. ` +
+          `Is of type: ${typeof store.accessors.get(path)}`)
+      }
+&nbsp;
+      return Promise.resolve(queryStore('filter', store.accessors.get(path), query))
+    },
+&nbsp;
+    insert (pathString, attrs) {
+      const path = pathString.split('.')
+&nbsp;
+      if (!isArray(store.accessors.get(path)) &amp;&amp; isArray(attrs)) {
+        throw new Error(`Store path: ${path} must be an array if adding a collection.`)
+      }
+&nbsp;
+      if (isArray(attrs)) {
+        store.mutators.concat(path, attrs)
+      } else if (!isArray(store.accessors.get(path))) {
+        store.mutators.set(path, attrs)
+      } else {
+        store.mutators.push(path, attrs)
+      }
+      return Promise.resolve(attrs)
+    },
+&nbsp;
+    update (pathString, id, attrs = null, options = {replace: false}) {
+      const path = pathString.split('.')
+&nbsp;
+      if (isArray(attrs)) throw new Error('ArgumentError: update() cannot set an array. Use updateAll() instead.')
+      const {identifier} = config(mappings, pathString)
+      let updated
+&nbsp;
+      if (isArray(store.accessors.get(path))) {
+        updated = updateCollection(store, pathString, id, identifier, attrs, options.replace)
+      } else {
+        updated = updateObject(store, pathString, attrs, options.replace)
+      }
+      return Promise.resolve(updated)
+    },
+&nbsp;
+    updateAll (pathString, collection, options = {}) {
+      const path = pathString.split('.')
+&nbsp;
+      if (!isArray(store.accessors.get(path))) throw new Error(`Store path: ${pathString} must be an array when adding a collection.`)
+      if (isEmpty(collection)) throw new Error(`updateAll() should not be used to update the store path: ${pathString} with an empty collection.`)
+&nbsp;
+      const {identifier} = config(mappings, pathString)
+&nbsp;
+      const index = collection.findIndex(item =&gt; identifier in item)
+      if (index === NOT_FOUND) throw new Error(`Collection has no property: '${identifier}'`)
+&nbsp;
+      const storeIds = store.accessors.get(path).map(item =&gt; item[identifier])
+      const collectionIds = collection.map(item =&gt; item[identifier])
+      const idsToRemove = storeIds.filter(id =&gt; collectionIds.indexOf(id) &lt; 0)
+&nbsp;
+      <span class="missing-if-branch" title="else path not taken" >E</span>if (!isEmpty(idsToRemove)) idsToRemove.forEach(id =&gt; this.update(pathString, id))
+&nbsp;
+      const updated = collection.map(item =&gt; this.update(pathString, item[identifier], item, options))
+      return Promise.all(updated)
+    },
+&nbsp;
+    updateWhere (pathString, query, attrs = null, options = {replace: true}) {
+      const path = pathString.split('.')
+      const {identifier} = config(mappings, pathString)
+      let updated = null
+&nbsp;
+      const item = queryStore('find', store.accessors.get(path), query)
+      if (!item) throw new Error(`No object found at path: '${pathString}' with query: '${JSON.stringify(query)}`)
+&nbsp;
+      if (isArray(store.accessors.get(path))) {
+        updated = updateCollection(store, pathString, item[identifier], identifier, attrs, options.replace)
+      } else {
+        updated = updateObject(store, pathString, attrs, options.replace)
+      }
+      return Promise.resolve(updated)
+    }
+  }
+}
+&nbsp;
+function updateObject (store, pathString, attrs, replace) {
+  const path = pathString.split('.')
+&nbsp;
+  if (attrs === null) {
+    const deleted = store.accessors.get(path)
+    store.mutators.set(path, attrs)
+    return deleted
+  } else if (replace || attrs === null) {
+    store.mutators.set(path, attrs)
+    return attrs
+  } else {
+    store.mutators.merge(path, attrs)
+    return store.accessors.get(path)
+  }
+}
+&nbsp;
+function updateCollection (store, pathString, id, identifier, attrs, replace) {
+  const path = pathString.split('.')
+  const index = store.accessors.get(path).findIndex(item =&gt; item[identifier] === id)
+&nbsp;
+  if (index === NOT_FOUND &amp;&amp; attrs === null) {
+    throw new Error(`No object found at path: '${pathString}' with '${identifier}': ${id}.`)
+  }
+&nbsp;
+  if (index === NOT_FOUND) {
+    store.mutators.push(path, attrs)
+    return attrs
+  } else if (attrs === null) {
+    const deleted = store.accessors.get(path)[index]
+    store.mutators.splice(path, index, 1)
+    return deleted
+  } else if (replace) {
+    store.mutators.splice(path, index, 1, attrs)
+    return attrs
+  } else {
+    const previous = assign({}, store.accessors.get(path)[index])
+    const updated = assign({}, previous, attrs)
+    store.mutators.splice(path, index, 1, updated)
+    return updated
+  }
+}
+&nbsp;
+function queryStore (method, cachedData, query) {
+  if (isEmpty(cachedData)) return null
+  if (isEmpty(query)) return <span class="branch-0 cbranch-no" title="branch not covered" >isEmpty(cachedData) ? <span class="cstat-no" title="statement not covered" >null </span>: cachedData</span>
+  let result
+&nbsp;
+  if (isArray(cachedData)) {
+    result = cachedData[method](item =&gt; {
+      return Object.keys(query).reduce((bool, queryKey) =&gt; {
+        return bool &amp;&amp; (item[queryKey] === query[queryKey])
+      }, true)
+    })
+  } else {
+    const check = Object.keys(query).reduce((bool, queryKey) =&gt; {
+      return bool &amp;&amp; (cachedData[queryKey] === query[queryKey])
+    }, true)
+    result = <span class="branch-1 cbranch-no" title="branch not covered" >check ? cachedData : <span class="cstat-no" title="statement not covered" >null</span></span>
+  }
+&nbsp;
+  return isEmpty(result) ? null : result
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jul 05 2016 01:00:22 GMT+0200 (CEST)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

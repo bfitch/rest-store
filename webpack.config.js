@@ -22,8 +22,8 @@ module.exports = {
   },
   resolve: {
     extensions: ['', '.js']
+  },
+  node: {
+    global: false
   }
-// node: {
-//   global: false
-// }
 }

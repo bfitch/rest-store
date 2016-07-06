@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "webpack --devtool source-map --progress --colors --watch",
-    "build": "webpack --progress --colors",
+    "build": "webpack --devtool source-map --progress --colors",
     "pretest": "standard",
     "mocha": "mocha --compilers js:babel-register --reporter spec --colors test/**",
     "test": "cross-env NODE_ENV=test nyc -r lcov -r text npm run mocha"

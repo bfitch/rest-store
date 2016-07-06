@@ -90,23 +90,21 @@ export function restStore (mappings, storeAdapter, ajaxAdapter = axiosAdapter())
           return storeAdapter.update(path, transformedData[identifier], transformedData, {replace: true})
         })
       } else {
-        const _cid = uuid.v4()
-        const optimisticUpdate = assign({}, attributes, {_cid})
         let original = null
 
         storeAdapter.get(path, clientQuery).then(data => {
           original = data
         })
 
-        return storeAdapter.update(path, attributes[identifier], optimisticUpdate, {replace: true})
+        return storeAdapter.update(path, attributes[identifier], attributes, {replace: true})
           .then(() => {
             return ajaxAdapter.update(url, attributes, params, headers)
               .then(data => {
                 const transformedData = transformResponse(data, storeAdapter, options)
-                return storeAdapter.updateWhere(path, {_cid}, transformedData, {replace: true})
+                return storeAdapter.updateWhere(path, {[identifier]: attributes[identifier]}, transformedData, {replace: true})
               })
               .catch(response => {
-                storeAdapter.updateWhere(path, {_cid}, original, {replace: true})
+                storeAdapter.updateWhere(path, {[identifier]: original[identifier]}, original, {replace: true})
                 throw response
               })
           })

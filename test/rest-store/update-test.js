@@ -61,7 +61,7 @@ describe('update', function () {
 
       store.update('todos', {id: 1}, {id: 1, c: 'c'})
 
-      expect(storeStub.calledWithExactly('todos', 1, {id: 1, c: 'c', _cid: '123'}, {replace: true})).to.be.true
+      expect(storeStub.calledWithExactly('todos', 1, {id: 1, c: 'c'}, {replace: true})).to.be.true
       sinon.collection.restore()
     })
 
@@ -72,7 +72,7 @@ describe('update', function () {
           return {todo: JSON.parse(requestBody)}
         })
 
-      it('POSTs to the server and replaces the cid with the response data', function () {
+      it('POSTs to the server and replaces the object with the response data', function () {
         return store.update('todos', {id: 1}, {id: 1, a: 'a', c: 'c'}).then(data => {
           expect(data).to.eql({id: 1, a: 'a', c: 'c'})
           expect(cache).to.eql({todos: [{id: 1, a: 'a', c: 'c'}]})
