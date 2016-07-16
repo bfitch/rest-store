@@ -3,6 +3,7 @@
 [![NPM version][npm-image]][npm-url]
 [![Build status][travis-image]][travis-url]
 [![codecov](https://codecov.io/gh/bfitch/rest-store/branch/master/graph/badge.svg)](https://codecov.io/gh/bfitch/rest-store)
+[![Dependency Status](https://david-dm.org/bfitch/rest-store.svg)](https://david-dm.org/bfitch/rest-store)
 [![js-standard-style][standard-image]][standard-url]
 
 [npm-image]: https://img.shields.io/npm/v/rest-store.svg?style=flat
