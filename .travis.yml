@@ -3,3 +3,5 @@ node_js:
   - 'node'
 before_script:
   - npm install cerebral-model-baobab
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
