@@ -57,6 +57,16 @@ describe('get', function () {
             expect(data).to.eql({id: 1, a: 'a', b: 'b'})
           })
         })
+
+        describe('store data is not an array', function () {
+          it('returns the correct object', function () {
+            const adapter = storeAdapter({todo: {id: 1, a: 'a', b: 'b'}})
+
+            return adapter.get('todo', {a: 'a', b: 'bb'}).then(data => {
+              expect(data).to.be.null
+            })
+          })
+        })
       })
 
       describe('no object exists with matching attributes', function () {

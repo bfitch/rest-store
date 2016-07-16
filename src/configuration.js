@@ -50,7 +50,7 @@ function composeTransformations ({transforms, defaultTransform = {defaultTransfo
     }
   } else {
     // single function, not a pipeline
-    return transforms || defaultResponseTransform
+    return transforms
   }
 }
 

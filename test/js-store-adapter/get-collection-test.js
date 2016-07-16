@@ -20,6 +20,16 @@ describe('getCollection', function () {
         expect(data).to.eql(data)
       })
     })
+
+    describe('empty data at the path', function () {
+      it('returns null', function () {
+        const adapter = storeAdapter({todos: []})
+
+        return adapter.getCollection('todos').then(data => {
+          expect(data).to.be.null
+        })
+      })
+    })
   })
 
   describe('query argument provided', function () {

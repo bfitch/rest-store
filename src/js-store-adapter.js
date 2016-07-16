@@ -128,7 +128,7 @@ function updateCollection (store, path, id, identifier, attrs, replace) {
 
 function queryStore (method, cachedData, query) {
   if (isEmpty(cachedData)) return null
-  if (isEmpty(query)) return isEmpty(cachedData) ? null : cachedData
+  if (isEmpty(query)) return cachedData
   let result
 
   if (isArray(cachedData)) {

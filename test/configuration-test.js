@@ -70,6 +70,16 @@ describe('configuration', function () {
       expect(c.transformResponse()).to.eql('woot')
     })
 
+    describe('default transform', function () {
+      const mappings = {
+        todos: { url: mappingUrl }
+      }
+      it('handles root keys in the server response', function () {
+        const c = config(mappings, 'todos', 'find')
+        expect(c.transformResponse({rootKey: 'data'})).to.equal('data')
+      })
+    })
+
     describe('user provided pipeline of transformations', function () {
       const mappings = {
         todos: {

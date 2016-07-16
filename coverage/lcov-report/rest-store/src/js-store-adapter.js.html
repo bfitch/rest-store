@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">96.85% </span>
+        <span class="strong">98.4% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>123/127</span>
+        <span class='fraction'>123/125</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">95.59% </span>
+        <span class="strong">98.48% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>65/68</span>
+        <span class='fraction'>65/66</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -225,22 +225,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">30×</span>
-<span class="cline-any cline-yes">78×</span>
+<span class="cline-any cline-yes">31×</span>
+<span class="cline-any cline-yes">79×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">25×</span>
-<span class="cline-any cline-yes">23×</span>
+<span class="cline-any cline-yes">26×</span>
+<span class="cline-any cline-yes">24×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-yes">14×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">13×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -348,35 +348,35 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">47×</span>
+<span class="cline-any cline-yes">49×</span>
+<span class="cline-any cline-yes">42×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">41×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">40×</span>
 <span class="cline-any cline-yes">36×</span>
 <span class="cline-any cline-yes">59×</span>
 <span class="cline-any cline-yes">63×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">41×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">295×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">295×</span>
+<span class="cline-any cline-yes">447×</span>
 <span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">40×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">292×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">292×</span>
-<span class="cline-any cline-yes">444×</span>
-<span class="cline-any cline-yes">4×</span>
-<span class="cline-any cline-yes">4×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">440×</span>
+<span class="cline-any cline-yes">443×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -525,7 +525,7 @@ function updateCollection (store, path, id, identifier, attrs, replace) {
 &nbsp;
 function queryStore (method, cachedData, query) {
   if (isEmpty(cachedData)) return null
-  if (isEmpty(query)) return <span class="branch-0 cbranch-no" title="branch not covered" >isEmpty(cachedData) ? <span class="cstat-no" title="statement not covered" >null </span>: cachedData</span>
+  if (isEmpty(query)) return cachedData
   let result
 &nbsp;
   if (isArray(cachedData)) {
@@ -538,7 +538,7 @@ function queryStore (method, cachedData, query) {
     const check = Object.keys(query).reduce((bool, queryKey) =&gt; {
       return bool &amp;&amp; (cachedData[queryKey] === query[queryKey])
     }, true)
-    result = <span class="branch-1 cbranch-no" title="branch not covered" >check ? cachedData : <span class="cstat-no" title="statement not covered" >null</span></span>
+    result = check ? cachedData : null
   }
 &nbsp;
   return isEmpty(result) ? null : result
@@ -577,7 +577,7 @@ export function setPath (store, pathString, value) {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jul 05 2016 01:00:22 GMT+0200 (CEST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Jul 16 2016 00:15:05 GMT-0400 (EDT)
 </div>
 </div>
 <script src="../../prettify.js"></script>

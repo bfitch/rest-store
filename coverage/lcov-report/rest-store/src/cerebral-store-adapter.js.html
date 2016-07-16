@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">97.5% </span>
+        <span class="strong">99.15% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>117/120</span>
+        <span class='fraction'>117/118</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">95% </span>
+        <span class="strong">98.28% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>57/60</span>
+        <span class='fraction'>57/58</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -212,26 +212,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">26×</span>
-<span class="cline-any cline-yes">47×</span>
+<span class="cline-any cline-yes">28×</span>
+<span class="cline-any cline-yes">49×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">47×</span>
+<span class="cline-any cline-yes">49×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">9×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10×</span>
 <span class="cline-any cline-yes">10×</span>
-<span class="cline-any cline-yes">8×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9×</span>
-<span class="cline-any cline-yes">9×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">9×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -348,24 +348,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">22×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">20×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">19×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">18×</span>
 <span class="cline-any cline-yes">14×</span>
 <span class="cline-any cline-yes">29×</span>
 <span class="cline-any cline-yes">33×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4×</span>
-<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">6×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">19×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import Model from 'cerebral-model-baobab'
 import config from './configuration'
@@ -511,7 +511,7 @@ function updateCollection (store, pathString, id, identifier, attrs, replace) {
 &nbsp;
 function queryStore (method, cachedData, query) {
   if (isEmpty(cachedData)) return null
-  if (isEmpty(query)) return <span class="branch-0 cbranch-no" title="branch not covered" >isEmpty(cachedData) ? <span class="cstat-no" title="statement not covered" >null </span>: cachedData</span>
+  if (isEmpty(query)) return cachedData
   let result
 &nbsp;
   if (isArray(cachedData)) {
@@ -524,7 +524,7 @@ function queryStore (method, cachedData, query) {
     const check = Object.keys(query).reduce((bool, queryKey) =&gt; {
       return bool &amp;&amp; (cachedData[queryKey] === query[queryKey])
     }, true)
-    result = <span class="branch-1 cbranch-no" title="branch not covered" >check ? cachedData : <span class="cstat-no" title="statement not covered" >null</span></span>
+    result = check ? cachedData : null
   }
 &nbsp;
   return isEmpty(result) ? null : result
@@ -535,7 +535,7 @@ function queryStore (method, cachedData, query) {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jul 05 2016 01:00:22 GMT+0200 (CEST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Jul 16 2016 00:15:05 GMT-0400 (EDT)
 </div>
 </div>
 <script src="../../prettify.js"></script>
