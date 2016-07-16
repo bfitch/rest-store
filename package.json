@@ -27,7 +27,7 @@
     "cerebral-model-baobab": "^0.4.9"
   },
   "dependencies": {
-    "axios": "^0.9.1",
+    "axios": "^0.13.1",
     "node-uuid": "^1.4.7",
     "path-to-regexp": "^1.2.1",
     "url-parse": "^1.1.1"

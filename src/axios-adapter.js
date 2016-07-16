@@ -21,8 +21,8 @@ export default function (axios = ajax) {
   return Object.assign(adapter, {http: axios})
 
   function request (axiosOptions) {
-    return axios(axiosOptions).then(response => {
-      return response.data
-    })
+    return axios(axiosOptions)
+      .then(response => { return response.data })
+      .catch(({response}) => { throw response })
   }
 }
