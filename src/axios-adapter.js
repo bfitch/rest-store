@@ -23,6 +23,9 @@ export default function (axios = ajax) {
   function request (axiosOptions) {
     return axios(axiosOptions)
       .then(response => { return response.data })
-      .catch(({response}) => { throw response })
+      .catch((error) => {
+        if ('response' in error) throw error.response
+        throw error
+      })
   }
 }
