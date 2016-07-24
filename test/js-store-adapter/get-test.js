@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
-import storeAdapter from '../../src/js-store-adapter'
+import storeAdapter from '../../src/store-adapters/javascript'
 
 describe('get', function () {
   describe('invalid query arguments', function () {

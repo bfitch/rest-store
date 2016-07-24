@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
-import storeAdapter from '../../src/cerebral-store-adapter'
-import Model from 'cerebral-model-baobab'
+import storeAdapter from '../../src/store-adapters/cerebral'
+import Model from 'cerebral-model-immutable'
 
 describe('CerebralStoreAdapter', function () {
   describe('update', function () {

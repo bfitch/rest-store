@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
-import storeAdapter, { getPath, setPath } from '../src/js-store-adapter'
+import storeAdapter, { getPath, setPath } from '../src/store-adapters/javascript'
 
 describe('storeAdapter', function () {
   it('exposes the raw cache', function () {

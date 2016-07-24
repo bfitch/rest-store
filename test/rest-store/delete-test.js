@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import sinon from 'sinon'
 import nock from 'nock'
 import { restStore } from '../../index'
-import jsStoreAdapter from '../../src/js-store-adapter'
+import jsStoreAdapter from '../../src/store-adapters/javascript'
 import axiosAdapter from '../../src/axios-adapter'
 
 describe('delete', function () {

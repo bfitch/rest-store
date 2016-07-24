@@ -1,7 +1,7 @@
-import config from './configuration'
-import { isEmpty } from './utils'
-const {isArray} = Array
-const {assign} = Object
+import config from '../configuration'
+import { isEmpty } from '../utils'
+const { isArray } = Array
+const { assign } = Object
 const NOT_FOUND = -1
 
 export default function (store = {}, mappings = {}) {

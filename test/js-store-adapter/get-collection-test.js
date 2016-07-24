@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
-import storeAdapter from '../../src/js-store-adapter'
+import storeAdapter from '../../src/store-adapters/javascript'
 
 describe('getCollection', function () {
   it('throws an error if data at the path is not an array', function () {

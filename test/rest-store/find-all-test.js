@@ -2,7 +2,7 @@ import { describe, it } from 'mocha'
 import { expect } from 'chai'
 import nock from 'nock'
 import { restStore } from '../../index'
-import jsStoreAdapter from '../../src/js-store-adapter'
+import jsStoreAdapter from '../../src/store-adapters/javascript'
 
 describe('findAll', function () {
   const mockServer = nock('http://todos.com')

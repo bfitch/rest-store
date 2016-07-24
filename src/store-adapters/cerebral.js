@@ -1,8 +1,8 @@
-import Model from 'cerebral-model-baobab'
-import config from './configuration'
-import { isEmpty } from './utils'
-const {isArray} = Array
-const {assign} = Object
+import Model from 'cerebral-model-immutable'
+import config from '../configuration'
+import { isEmpty } from '../utils'
+const { isArray } = Array
+const { assign } = Object
 const NOT_FOUND = -1
 
 export default function (model = Model(), mappings = {}) {

@@ -23,9 +23,6 @@
       "/dist"
     ]
   },
-  "peerDependencies": {
-    "cerebral-model-baobab": "^0.4.9"
-  },
   "dependencies": {
     "axios": "^0.13.1",
     "node-uuid": "^1.4.7",
@@ -39,6 +36,7 @@
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13",
     "babel-register": "^6.4.3",
+    "cerebral-model-immutable": "^0.1.4",
     "chai": "^3.4.1",
     "cross-env": "^1.0.8",
     "mocha": "^2.3.4",
@@ -55,7 +53,7 @@
   "keywords": [
     "cerebral",
     "ajax",
-    "baobab",
+    "http",
     "REST"
   ],
   "author": "Brian Fitch",
