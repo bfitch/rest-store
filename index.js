@@ -1,10 +1,28 @@
+/* @flow */
 import uuid from 'node-uuid'
 import axiosAdapter from './src/axios-adapter'
 import config from './src/configuration'
 import { isEmpty } from './src/utils'
 const { assign } = Object
 
-export function restStore (mappings, storeAdapter, ajaxAdapter = axiosAdapter()) {
+type storeAdapter = {
+
+}
+
+declare function defaultResponseTransform (response: Object, store: Object, config: Object): Object;
+type PathConfiguration = {
+  url: string,
+  identifier?: string,
+  transformResponse?: {
+    transforms: defaultResponseTransform
+  }
+}
+type Path = { [key: string]: PathConfiguration };
+type Mappings = {
+  path: string,
+}
+
+export function restStore (mappings: Mappings, storeAdapter, ajaxAdapter = axiosAdapter()) {
   if (!storeAdapter) throw new Error('No storeAdapter. You must provide an in-memory store')
 
   return {
