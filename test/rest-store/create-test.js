@@ -63,7 +63,7 @@ describe('create', function () {
     const store = restStore(mappings, storeAdapter)
 
     it('inserts the object into the store before POSTing to the server', function () {
-      const uuid = require('node-uuid')
+      const uuid = require('uuid')
       sinon.collection.stub(uuid, 'v4').returns('123')
       const storeStub = sinon.collection.stub(storeAdapter, 'insert').returns({then () {}})
 
