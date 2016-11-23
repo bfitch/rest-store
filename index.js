@@ -1,4 +1,4 @@
-import uuid from 'node-uuid'
+import uuid from 'uuid'
 import axiosAdapter from './src/axios-adapter'
 import config from './src/configuration'
 import { isEmpty } from './src/utils'
